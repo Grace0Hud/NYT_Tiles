@@ -1,5 +1,7 @@
 package edu.cpp.cs3560.model;
-
+/**
+ * Model for how an individual game proceeds.
+ */
 public class GameModel
 {
     private final Board board;
