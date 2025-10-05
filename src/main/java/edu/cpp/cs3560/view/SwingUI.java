@@ -18,7 +18,7 @@ public class SwingUI
     private final GameModel model = new GameModel(ROWS, COLS, System.nanoTime());
     private final GameController controller = new GameController(model);
     // Simple icons (replace with images if you’d like)
-    private final Icon backIcon = iconColor(new Color(60,90,150), "￿");
+    private final Icon backIcon = iconColor(new Color(69, 203, 34), "Matched!");
     private final Map<Integer, Icon> faceIcons = new HashMap<>();
 
 
@@ -92,10 +92,10 @@ public class SwingUI
 		    b.setIcon(backIcon);
 		}else if(card.isSelected())
 		{
-		    b.setBorder(new LineBorder(Color.RED));
+		    b.setBorder(BorderFactory.createLineBorder(Color.WHITE, 4));
 		}else
 		{
-		    b.setBorder(new LineBorder(Color.BLACK));
+		    b.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		}
 	  }
 	  status.setText(model.toString());
@@ -108,7 +108,7 @@ public class SwingUI
 		    RenderingHints.VALUE_ANTIALIAS_ON);
 	  g.setColor(bg); g.fillRoundRect(0,0,W,H,20,20);
 	  g.setColor(Color.BLACK);
-	  g.setFont(new Font("SansSerif", Font.PLAIN, 48));
+	  g.setFont(new Font("SansSerif", Font.PLAIN, 25));
 	  FontMetrics fm = g.getFontMetrics();
 	  int tw = fm.stringWidth(text);
 	  g.drawString(text, (W - tw)/2, H/2 + fm.getAscent()/2 - 8);
