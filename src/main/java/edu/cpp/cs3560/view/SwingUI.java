@@ -17,8 +17,14 @@ public class SwingUI
     private final JButton[][] buttons = new JButton[ROWS][COLS];
     private final GameModel model = new GameModel(ROWS, COLS, System.nanoTime());
     private final GameController controller = new GameController(model);
+
+    private final HashMap<String, Color> themeColors = new HashMap<>(){{
+	  put("GREEN", new Color(66, 131, 49));
+	  put("BROWN", new Color(78, 50, 15));
+	  put("CREAM", new Color(218, 175, 131));
+    }};
     // Simple icons (replace with images if you’d like)
-    private final Icon backIcon = iconColor(new Color(69, 203, 34), "Matched!");
+    private final Icon backIcon = iconColor(themeColors.get("GREEN"), "Matched!");
     private final Map<Integer, Icon> faceIcons = new HashMap<>();
 
 
@@ -27,7 +33,7 @@ public class SwingUI
 	  String[] glyphs = {"A","B","C","D","E","F","G","H","I","J","K"};
 	  for (int i = 0; i < ROWS*COLS; i++)
 	  {
-		faceIcons.put(i, iconColor(new Color(230, 230, 230), glyphs[i%glyphs.length]));
+		faceIcons.put(i, iconColor(themeColors.get("CREAM"), glyphs[i%glyphs.length]));
 	  }
 	  frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	  frame.setLayout(new BorderLayout(10,10));
@@ -36,15 +42,18 @@ public class SwingUI
 	  frame.add(top, BorderLayout.NORTH);
 	  frame.add(grid, BorderLayout.CENTER);
 	  grid.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+	  grid.setBackground(themeColors.get("BROWN"));
 	  buildGrid();
 	  frame.setSize(600, 650);
 	  frame.setLocationRelativeTo(null);
+	  frame.getContentPane().setBackground(themeColors.get("BROWN"));
 	  frame.setVisible(true);
     }
     private void buildGrid() {
 	  for (int r=0;r<ROWS;r++) {
 		for (int c=0;c<COLS;c++) {
 		    JButton b = new JButton(faceIcons.get(model.getBoard().get(r,c).getId()));
+		    b.setBackground(themeColors.get("CREAM"));
 		    b.setFocusPainted(false);
 		    int rr = r, cc = c;
 		    b.addActionListener(e -> onClick(rr, cc));
@@ -92,7 +101,7 @@ public class SwingUI
 		    b.setIcon(backIcon);
 		}else if(card.isSelected())
 		{
-		    b.setBorder(BorderFactory.createLineBorder(Color.WHITE, 4));
+		    b.setBorder(BorderFactory.createLineBorder(themeColors.get("GREEN"), 4));
 		}else
 		{
 		    b.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
