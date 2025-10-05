@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class GameController
 {
     private final GameModel model;
-    private Card firstPick = null;
+    private BoardCell firstPick;
     private boolean inputLocked = false;
     int difficulty = 1;
     Scanner input;
@@ -49,30 +49,29 @@ public class GameController
 	  //not accepting input at this time, return.
 	  if (inputLocked) return;
 
-	  Card card = model.getBoard().get(r, c);
+	  BoardCell cell = model.getBoard().getCellAt(r,c);
+	  Card[] cards = cell.getCards();
 	  //not a valid match card. Do nothing and return.
-	  if (card.isMatched() || card.isSelected()) return;
+	  if (model.getBoard().isCellSelected(r,c) || model.getBoard().isCellmatched(r,c)) return;
 	  //increment move count
 	  model.incrementMoves();
-	  card.setSelected(true);
+	  cell.selectCell();
 
 	  if (firstPick == null) //if this is the first pick, set this card as the first pick.
 	  {
-		firstPick = card;
+		firstPick = cell;
 	  } else //if this is the second pick.
 	  {
 		// Compare
-		if (firstPick.getId() == card.getId()) //there is a match
+		if (firstPick.matchCell(cell)) //there is a match
 		{
-		    firstPick.markMatched();
-		    card.markMatched();
 		    model.incrementScore();
 		    firstPick = null;
 		} else //not a match.
 		{
 		    // Temporarily lock input; UI should call onMismatchDelay.run() after ~700ms
 		    inputLocked = true;
-		    Card a = firstPick, b = card;
+		    BoardCell a = firstPick, b = cell;
 		    firstPick = null;
 		    model.incrementIncorr();
 		    onMismatchDelay.run(); // UI schedules the actual delay
@@ -84,7 +83,7 @@ public class GameController
     /**
      * Called by command line game.
      */
-    public void onCardClicked(int r, int c)
+    /* public void onCardClicked(int r, int c)
     {
 	  //not accepting input at this time, return.
 	  if (inputLocked) return;
@@ -119,7 +118,7 @@ public class GameController
 		firstPick = null;
 	  }
     }
-
+*/
     /**
      * To run the command line game.
      */
@@ -133,7 +132,7 @@ public class GameController
 		System.out.print("Please select a card (r c): ");
 		int r = input.nextInt();
 		int c = input.nextInt();
-		onCardClicked(r, c);
+		//onCardClicked(r, c);
 		System.out.println(model.toString());
 	  }
 	  System.out.println("******* GAME OVER *******\n");
@@ -159,10 +158,10 @@ public class GameController
     /**
      * UI calls this after the delay expires.
      */
-    public void resolveMismatch(Card a, Card b)
+    public void resolveMismatch(BoardCell a, BoardCell b)
     {
-	  a.setSelected(false);
-	  b.setSelected(false);
+	  a.deSelectCell();
+	  b.deSelectCell();
 	  inputLocked = false;
     }
     public boolean isWin() { return model.getBoard().allMatched(); }

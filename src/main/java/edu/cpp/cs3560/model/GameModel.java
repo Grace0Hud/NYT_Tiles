@@ -12,6 +12,11 @@ public class GameModel
     {
 	  this.board = new Board(rows, cols, seed);
     }
+
+    public GameModel(int rows, int cols, long seed, int level)
+    {
+	  this.board = new Board(rows, cols, seed, level);
+    }
     public Board getBoard() { return board; }
     public int getScore() { return score; }
     public int getNumMoves() { return numMoves; }
@@ -32,6 +37,7 @@ public class GameModel
     public String toString()
     {
 	  StringBuilder str = new StringBuilder();
+	  str.append("Level: " + board.getLevel() + "    ");
 	  str.append("Score: " + score + "    ");
 	  str.append("Total Moves: " + numMoves + "    ");
 	  str.append("Incorrect Moves: " + incorrectMoves + "    ");

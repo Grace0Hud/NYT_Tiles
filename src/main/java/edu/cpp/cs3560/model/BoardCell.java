@@ -124,7 +124,11 @@ public class BoardCell
 	  StringBuilder str = new StringBuilder();
 	  for(Card card : cards)
 	  {
-		str.append(card.toString() + "\n");
+		str.append(card.toString());
+		if(level > 1)
+		{
+		    str.append(", ");
+		}
 	  }
 	  return str.toString();
     }

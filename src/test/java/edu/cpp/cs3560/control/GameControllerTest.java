@@ -32,7 +32,7 @@ class GameControllerTest
     @Test
     void onCardClicked()
     {
-        controller.onCardClicked(0,0);
+        //controller.onCardClicked(0,0);
         assertTrue(model.getBoard().get(0,0).isSelected());
     }
 

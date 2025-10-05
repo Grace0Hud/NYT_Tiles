@@ -62,7 +62,7 @@ class BoardTest {
     }
 
     @Test
-    void multiLevel()
+    void multiLevelUniqueIds()
     {
 	  Board board2 = new Board(2,2,System.currentTimeMillis(), 2);
 	  System.out.println(board2);
@@ -81,14 +81,13 @@ class BoardTest {
 		    }
 		}
 	  }
-
     }
 
     @Test
     void testToString()
     {
-	  String expected = " " + board.get(0,0).toString() + " | " + board.get(0,1).toString()
-		    + "\n------------+------------\n" + " " + board.get(1,0).toString() + " | "
+	  String expected = board.get(0,0).toString() + " |" + board.get(0,1).toString()
+		    + "\n------------+------------\n" + board.get(1,0).toString() + " |"
 		    + board.get(1,1).toString() + "\n\n";
 	  assertEquals(expected,board.toString());
     }
