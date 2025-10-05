@@ -97,6 +97,7 @@ class BoardCellTest
     @Test
     void isAllMatched()
     {
+        assertFalse(cell.isAllMatched());
         cell.markCardMatched(0);
         cell.markCardMatched(1);
         assertTrue(cell.isAllMatched());

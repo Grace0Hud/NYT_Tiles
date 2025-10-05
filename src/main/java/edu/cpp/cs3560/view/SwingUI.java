@@ -1,5 +1,6 @@
 package edu.cpp.cs3560.view;
 import edu.cpp.cs3560.control.GameController;
+import edu.cpp.cs3560.model.BoardCell;
 import edu.cpp.cs3560.model.GameModel;
 import edu.cpp.cs3560.model.Card;
 import javax.swing.*;
@@ -85,18 +86,18 @@ public class SwingUI
 	  controller.onCardClicked(r, c, () -> {
 		// Schedule a delay using Swing Timer
 		new javax.swing.Timer(700, e -> {
-		    Card a = model.getBoard().get(r, c); // not the first; so we must find both
+		    BoardCell a = model.getBoard().getCellAt(r, c); // not the first; so we must find both
 			// Find a non-matched partner (the firstPick was internal)
 			// Simpler: just flip back all faceUp but not matched & not this one after mismatch
 			// But we have explicit method: we need both; so scan
-		    Card first = null, second = null;
+		    BoardCell first = null, second = null;
 		    outer:
 		    for (int i=0;i<model.getBoard().getRows();i++)
 			  for (int j=0;j<model.getBoard().getCols();j++) {
-				Card card = model.getBoard().get(i,j);
-				if (card.isSelected() && !card.isMatched()) {
-				    if (first == null) first = card;
-				    else { second = card; break outer; }
+				BoardCell cell = model.getBoard().getCellAt(i,j);
+				if (cell.isSelected() && !cell.isAllMatched()) {
+				    if (first == null) first = cell;
+				    else { second = cell; break outer; }
 				}
 			  }
 		    if (first != null && second != null) {

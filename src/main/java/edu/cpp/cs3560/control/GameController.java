@@ -83,42 +83,40 @@ public class GameController
     /**
      * Called by command line game.
      */
-    /* public void onCardClicked(int r, int c)
+    public void onCardClicked(int r, int c)
     {
 	  //not accepting input at this time, return.
 	  if (inputLocked) return;
-	  Card card = model.getBoard().get(r, c);
+
+	  BoardCell cell = model.getBoard().getCellAt(r,c);
+	  Card[] cards = cell.getCards();
 	  //not a valid match card. Do nothing and return.
-	  if (card.isMatched()) return;
+	  if (model.getBoard().isCellSelected(r,c) || model.getBoard().isCellmatched(r,c)) return;
 	  //increment move count
 	  model.incrementMoves();
-	  card.setSelected(true);
+	  cell.selectCell();
 
 	  if (firstPick == null) //if this is the first pick, set this card as the first pick.
 	  {
-		firstPick = card;
+		firstPick = cell;
 	  } else //if this is the second pick.
 	  {
 		// Compare
-		if (firstPick.getId() == card.getId()) //there is a match
+		if (firstPick.matchCell(cell)) //there is a match
 		{
-		    firstPick.setMatched(true);
-		    card.setMatched(true);
 		    model.incrementScore();
+		    firstPick = null;
 		} else //not a match.
 		{
 		    // Temporarily lock input; UI should call onMismatchDelay.run() after ~700ms
 		    inputLocked = true;
-		    Card a = firstPick, b = card;
+		    BoardCell a = firstPick, b = cell;
+		    firstPick = null;
 		    model.incrementIncorr();
 		    // After delay, UI must call controller.resolveMismatch(a,b)
 		}
-		firstPick.setSelected(false);
-		card.setSelected(false);
-		firstPick = null;
 	  }
     }
-*/
     /**
      * To run the command line game.
      */

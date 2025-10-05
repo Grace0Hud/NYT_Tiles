@@ -103,20 +103,20 @@ public class BoardCell
 
     public boolean isAllMatched()
     {
-	  checkAllMatched();
+	  allMatched = checkAllMatched();
 	  return allMatched;
     }
 
-    private void checkAllMatched()
+    private boolean checkAllMatched()
     {
 	  for (Card card : cards)
 	  {
 		if (!card.isMatched())
 		{
-		    this.allMatched = false;
+		    return false;
 		}
 	  }
-	  this.allMatched = true;
+	  return true;
     }
 
     public String toString()
