@@ -9,7 +9,7 @@ public class Board
 {
     private final int rows,cols;
     private final Card[][][] grid;
-    int level;
+    int level; //number of cards per tile in the board.
     List<Integer> ids = new ArrayList<>();
 
     public Board(int rows, int cols, long seed)
@@ -19,7 +19,7 @@ public class Board
 	  this.grid = new Card[rows][cols][level];
 	  // Create pair ids: 0..(nPairs-1) twice
 	  int n = rows * cols * level;
-	  System.out.println("Test");
+	  //System.out.println("Test");
 	  for (int i = 0; i < n / 2; i++) { ids.add(i); ids.add(i); }
 	  // Need to shuffle cards to make sure the cards are in random orders each time.
 	  shuffleCards(seed);
@@ -32,7 +32,7 @@ public class Board
 	  this.grid = new Card[rows][cols][level];
 	  // Create pair ids: 0..(nPairs-1) twice
 	  int n = rows * cols * level;
-	  System.out.println("n: " + n);
+	  //System.out.println("n: " + n);
 	  for (int i = 0; i < n / 2; i++)
 	  {
 		ids.add(i); ids.add(i);
@@ -43,42 +43,42 @@ public class Board
 
     public int getRows() { return rows; }
     public int getCols() { return cols; }
+    public int getLevel()
+    {
+	  return level;
+    }
     public void shuffleCards(long seed)
     {
 	  // Need to shuffle cards to make sure the cards are in random orders each time.
 	  Collections.shuffle(ids, new Random(seed));
-	  //System.out.println(ids.toString());
+	  System.out.println("Ids: " + ids.toString());
 	  int count = 0;
 	  for (int r = 0; r < rows; r++)
 	  {
 		for (int c = 0; c < cols; c++)
 		{
-		    List<Integer> temp;
-		    if(ids.size() > count)
-		    {
-			  temp = ids.subList(count, ids.size());
-		    }else
-		    {
-			  temp = new ArrayList<>(ids);
-		    }
-
-		    //System.out.println(temp.toString());
+		    //for multiple levels, we need to make sure that one spot on the board doesn't have two of the same id.
+		    List<Integer> temp = new ArrayList<>(ids.subList(count, ids.size()));
+		    //System.out.println("Temp at count = " + count + ":  " + temp.toString());
 		    for (int l = 0; l < level; l++)
 		    {
 			  int id = temp.get(0);
 			  grid[r][c][l] = new Card(id);
-			  temp.remove(temp.indexOf(id));
+			  ArrayList toRemove = new ArrayList();
+			  toRemove.add(id);
+			  temp.removeAll(toRemove);
+			  //System.out.println("Tenp after removal: " + temp.toString());
+			  //System.out.println("Ids after removal: " + ids.toString());
 		    }
 		    count++;
 		}
 	  }
     }
 
-    public int getLevel()
-    {
-	  return level;
-    }
+
     public Card get(int r, int c) { return grid[r][c][0]; }
+
+    public Card[] getCardsAt(int r, int c){return grid[r][c];}
 
     public Card get(int r, int c, int l)
     {

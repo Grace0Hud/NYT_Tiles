@@ -13,7 +13,7 @@ class BoardTest {
     @BeforeEach
     void setUp()
     {
-	  //board = new Board(2,2, System.currentTimeMillis());
+	  board = new Board(2,2, System.currentTimeMillis());
     }
     @Test
     void getRows()
@@ -66,6 +66,22 @@ class BoardTest {
     {
 	  Board board2 = new Board(2,2,System.currentTimeMillis(), 2);
 	  System.out.println(board2);
+	  for(int i = 0 ; i < board2.getRows() ; i++)
+	  {
+		for(int j = 0 ; j < board2.getCols() ; j++)
+		{
+		    Card[] cards = board2.getCardsAt(i,j);
+		    for(int k = 0 ; k < cards.length-1; k++)
+		    {
+			  Card card = cards[k];
+			  for(int l = k+1; l < cards.length-1 ; l++)
+			  {
+				assertNotEquals(card,cards[l]);
+			  }
+		    }
+		}
+	  }
+
     }
 
     @Test
