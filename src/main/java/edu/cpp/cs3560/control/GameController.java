@@ -80,12 +80,12 @@ public class GameController
     {
 	  //not accepting input at this time, return.
 	  if (inputLocked) return;
-
 	  Card card = model.getBoard().get(r, c);
 	  //not a valid match card. Do nothing and return.
 	  if (card.isMatched()) return;
 	  //increment move count
 	  model.incrementMoves();
+	  card.markSelected();
 
 	  if (firstPick == null) //if this is the first pick, set this card as the first pick.
 	  {
@@ -98,16 +98,17 @@ public class GameController
 		    firstPick.markMatched();
 		    card.markMatched();
 		    model.incrementScore();
-		    firstPick = null;
 		} else //not a match.
 		{
 		    // Temporarily lock input; UI should call onMismatchDelay.run() after ~700ms
 		    inputLocked = true;
 		    Card a = firstPick, b = card;
-		    firstPick = null;
 		    model.incrementIncorr();
 		    // After delay, UI must call controller.resolveMismatch(a,b)
 		}
+		firstPick.markSelected();
+		card.markSelected();
+		firstPick = null;
 	  }
     }
 
@@ -121,7 +122,7 @@ public class GameController
 	  System.out.println(model.toString());
 	  while(!model.getBoard().allMatched())
 	  {
-		System.out.println("Please select a card (r c): ");
+		System.out.print("Please select a card (r c): ");
 		int r = input.nextInt();
 		int c = input.nextInt();
 		onCardClicked(r, c);

@@ -48,11 +48,10 @@ public class Board
 		}
 		sb.append("\n");
 		if (r < rows - 1) {
-		    for (int i = 0; i < rows; i++) sb.append("-----------" + (i < cols - 1 ? "+" : ""));
+		    for (int i = 0; i < rows; i++) sb.append("------------" + (i < cols - 1 ? "+" : ""));
 		}
 		sb.append("\n");
 	  }
-	  sb.append("]");
 	  return sb.toString();
     }
 }
