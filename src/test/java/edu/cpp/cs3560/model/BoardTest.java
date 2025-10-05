@@ -13,7 +13,7 @@ class BoardTest {
     @BeforeEach
     void setUp()
     {
-	  board = new Board(2,2, System.currentTimeMillis());
+	  //board = new Board(2,2, System.currentTimeMillis());
     }
     @Test
     void getRows()
@@ -59,6 +59,13 @@ class BoardTest {
 		}
 	  }
 	  assertTrue(board.allMatched());
+    }
+
+    @Test
+    void multiLevel()
+    {
+	  Board board2 = new Board(2,2,System.currentTimeMillis(), 2);
+	  System.out.println(board2);
     }
 
     @Test

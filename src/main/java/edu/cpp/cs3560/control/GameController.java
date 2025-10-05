@@ -11,11 +11,18 @@ public class GameController
     private final GameModel model;
     private Card firstPick = null;
     private boolean inputLocked = false;
+    int difficulty = 1;
     Scanner input;
 
     public GameController(GameModel model)
     {
 	  this.model = model;
+    }
+
+    public GameController(GameModel model, int difficulty)
+    {
+	  this.model = model;
+	  this.difficulty = difficulty;
     }
 
     public GameController(GameModel model, Scanner input)

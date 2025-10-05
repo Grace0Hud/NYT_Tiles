@@ -5,7 +5,7 @@ package edu.cpp.cs3560.model;
  */
 public class Card
 {
-    private int id; //used to identify matching cards.
+    private int id;//used to identify matching cards.
     private boolean matched; //used to check if card has already been matched.
     private boolean selected;
 

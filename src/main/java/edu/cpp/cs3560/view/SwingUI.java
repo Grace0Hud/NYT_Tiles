@@ -33,11 +33,7 @@ public class SwingUI
     public SwingUI() {
 	  chooseDifficulty();
 	  // Build simple emoji “faces” per id:
-	  String[] glyphs = {"A","B","C","D","E","F","G","H","I","J","K"};
-	  for (int i = 0; i < ROWS*COLS; i++)
-	  {
-		faceIcons.put(i, iconColor(themeColors.get("CREAM"), glyphs[i%glyphs.length]));
-	  }
+	  setUpIcons();
 	  frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	  frame.setLayout(new BorderLayout(10,10));
 	  JPanel top = new JPanel(new BorderLayout());
@@ -51,6 +47,24 @@ public class SwingUI
 	  frame.setLocationRelativeTo(null);
 	  frame.getContentPane().setBackground(themeColors.get("BROWN"));
 	  frame.setVisible(true);
+    }
+
+    private void setUpIcons()
+    {
+	  if(difficulty == 1)
+	  {
+		String[] glyphs = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"};
+		for (int i = 0; i < ROWS * COLS; i++)
+		{
+		    faceIcons.put(i, iconColor(themeColors.get("CREAM"), glyphs[i % glyphs.length]));
+		}
+	  }else if(difficulty == 2)
+	  {
+
+	  }else if(difficulty == 3)
+	  {
+
+	  }
     }
     private void buildGrid() {
 	  for (int r=0;r<ROWS;r++) {
