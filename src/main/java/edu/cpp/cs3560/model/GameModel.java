@@ -34,7 +34,7 @@ public class GameModel
 	  StringBuilder str = new StringBuilder();
 	  str.append("Score: " + score + "\n");
 	  str.append("Total Moves: " + numMoves + "\n");
-	  str.append("Number of Incorrect moves: " + incorrectMoves + "\n");
+	  str.append("Incorrect Moves: " + incorrectMoves + "\n");
 	  str.append(board.toString());
 	  return str.toString();
     }

@@ -76,7 +76,7 @@ public class GameController
     /**
      * Called by command line game.
      */
-    private void onCardClicked(int r, int c)
+    public void onCardClicked(int r, int c)
     {
 	  //not accepting input at this time, return.
 	  if (inputLocked) return;
@@ -153,7 +153,6 @@ public class GameController
      */
     public void resolveMismatch(Card a, Card b)
     {
-
 	  inputLocked = false;
     }
     public boolean isWin() { return model.getBoard().allMatched(); }
