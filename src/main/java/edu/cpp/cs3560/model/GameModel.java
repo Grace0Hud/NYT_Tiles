@@ -35,7 +35,7 @@ public class GameModel
 	  str.append("Score: " + score + "\n");
 	  str.append("Total Moves: " + numMoves + "\n");
 	  str.append("Incorrect Moves: " + incorrectMoves + "\n");
-	  str.append(board.toString());
+	  //str.append(board.toString());
 	  return str.toString();
     }
 }
