@@ -38,9 +38,9 @@ public class Card
 	  this.id = id;
     }
 
-    public void markSelected()
+    public void setSelected(boolean selected)
     {
-	  this.selected = !selected;
+	  this.selected = selected;
     }
 
     public boolean isSelected()
@@ -55,7 +55,11 @@ public class Card
 
     public void markMatched()
     {
-	  matched = true;
+	  this.matched = true;
+    }
+    public void setMatched(boolean matched)
+    {
+	  this.matched = matched;
     }
 
     public String toString()
@@ -65,7 +69,7 @@ public class Card
 		str.append("ID: " + id);
 		if (matched)
 		{
-		    str.append("- m");
+		    str.append("-  m");
 		} else
 		{
 		    str.append("- nm");

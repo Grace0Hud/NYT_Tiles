@@ -85,7 +85,7 @@ public class GameController
 	  if (card.isMatched()) return;
 	  //increment move count
 	  model.incrementMoves();
-	  card.markSelected();
+	  card.setSelected(true);
 
 	  if (firstPick == null) //if this is the first pick, set this card as the first pick.
 	  {
@@ -95,8 +95,8 @@ public class GameController
 		// Compare
 		if (firstPick.getId() == card.getId()) //there is a match
 		{
-		    firstPick.markMatched();
-		    card.markMatched();
+		    firstPick.setMatched(true);
+		    card.setMatched(true);
 		    model.incrementScore();
 		} else //not a match.
 		{
@@ -106,8 +106,8 @@ public class GameController
 		    model.incrementIncorr();
 		    // After delay, UI must call controller.resolveMismatch(a,b)
 		}
-		firstPick.markSelected();
-		card.markSelected();
+		firstPick.setSelected(false);
+		card.setSelected(false);
 		firstPick = null;
 	  }
     }
@@ -127,6 +127,25 @@ public class GameController
 		int c = input.nextInt();
 		onCardClicked(r, c);
 		System.out.println(model.toString());
+	  }
+	  System.out.println("******* GAME OVER *******\n");
+	  if(model.getBoard().allMatched())
+	  {
+		System.out.println("You won!");
+	  }
+	  else {
+		System.out.println("You lost!");
+	  }
+
+	  System.out.println("Play again? (y/n): ");
+	  String answer = input.next();
+	  if(answer.equals("y"))
+	  {
+		model.getBoard().shuffleCards(System.currentTimeMillis());
+		runGame();
+	  }else
+	  {
+		System.exit(0);
 	  }
     }
     /**

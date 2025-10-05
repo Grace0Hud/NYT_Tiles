@@ -9,15 +9,24 @@ public class Board
 {
     private final int rows,cols;
     private final Card[][] grid;
+    List<Integer> ids = new ArrayList<>();
 
-    public Board(int rows, int cols, long seed) {
+    public Board(int rows, int cols, long seed)
+    {
 	  if ((rows * cols) % 2 != 0) throw new IllegalArgumentException("Even number of cards required");
 	  this.rows = rows; this.cols = cols;
 	  this.grid = new Card[rows][cols];
 	  // Create pair ids: 0..(nPairs-1) twice
 	  int n = rows * cols;
-	  List<Integer> ids = new ArrayList<>();
 	  for (int i = 0; i < n / 2; i++) { ids.add(i); ids.add(i); }
+	  // Need to shuffle cards to make sure the cards are in random orders each time.
+	  shuffleCards(seed);
+    }
+
+    public int getRows() { return rows; }
+    public int getCols() { return cols; }
+    public void shuffleCards(long seed)
+    {
 	  // Need to shuffle cards to make sure the cards are in random orders each time.
 	  Collections.shuffle(ids, new Random(seed));
 	  Iterator<Integer> it = ids.iterator();
@@ -25,11 +34,7 @@ public class Board
 		for (int c = 0; c < cols; c++)
 		    grid[r][c] = new Card(it.next());
     }
-
-    public int getRows() { return rows; }
-    public int getCols() { return cols; }
     public Card get(int r, int c) { return grid[r][c]; }
-
     public boolean allMatched()
     {
 	  //make more efficient. Need to remove card and its matched card.
