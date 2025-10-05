@@ -4,9 +4,9 @@ package edu.cpp.cs3560.model;
  */
 public class GameModel
 {
-    private final Board board;
-    private int score = 0;
-    private int numMoves = 0;
+    private final Board board; //the board for gameplay.
+    private int score = 0; //the current score.
+    private int numMoves = 0; //the number of moves that have been taken.
     private int incorrectMoves = 0;
     public GameModel(int rows, int cols, long seed)
     {

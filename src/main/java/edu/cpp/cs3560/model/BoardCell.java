@@ -1,12 +1,18 @@
 package edu.cpp.cs3560.model;
 
+/**
+ * Class to represent a specific cell in a board.
+ */
 public class BoardCell
 {
     final int level;
-    private Card[] cards;
+    private final Card[] cards;
     private boolean selected;
-    private boolean allMatched;
 
+    /**
+     * Creates a board cell with the specified level.
+     * @param level number of cards per cell.
+     */
     public BoardCell(int level)
     {
 	  this.level = level;
@@ -14,6 +20,9 @@ public class BoardCell
 	  initializeCards();
     }
 
+    /**
+     * Creates valid empty card objects.
+     */
     private void initializeCards()
     {
 	  for(int i = 0; i < level; i++)
@@ -21,6 +30,7 @@ public class BoardCell
 		cards[i] = new Card(0);
 	  }
     }
+
     public int getLevel()
     {
 	  return level;
@@ -62,6 +72,11 @@ public class BoardCell
 	  return selected;
     }
 
+    /**
+     * Checks if the cell has matching ids to another cell.
+     * @param other a board cell other than this one.
+     * @return if the cell has a card which matches this cell.
+     */
     public boolean matchCell(BoardCell other)
     {
 	  if (other == null || other.level != level)
@@ -79,6 +94,12 @@ public class BoardCell
 	  }
 	  return false;
     }
+
+    /**
+     * Checks to see if the cell has and id which matches the one provided.
+     * @param id the id of the card to check against.
+     * @return if the cell has a card with a matching id.
+     */
     public boolean matchCard(int id)
     {
 	  for(Card card : cards)
@@ -103,10 +124,13 @@ public class BoardCell
 
     public boolean isAllMatched()
     {
-	  allMatched = checkAllMatched();
-	  return allMatched;
+	  return checkAllMatched();
     }
 
+    /**
+     * Checks if all the cards contained in the cell have been matched.
+     * @return if all cards are matched.
+     */
     private boolean checkAllMatched()
     {
 	  for (Card card : cards)
@@ -119,6 +143,10 @@ public class BoardCell
 	  return true;
     }
 
+    /**
+     *
+     * @return a string representation of the cell.
+     */
     public String toString()
     {
 	  StringBuilder str = new StringBuilder();

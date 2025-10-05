@@ -7,7 +7,7 @@ public class Card
 {
     private int id;//used to identify matching cards.
     private boolean matched; //used to check if card has already been matched.
-    private boolean selected;
+    private boolean selected;//used to check if the card is currently selected.
 
     /**
      * Creates a card with the specified ID. Cards are face down and unmatched as a default.
@@ -18,13 +18,6 @@ public class Card
     {
 	  this.id = id;
 	  this.matched = false;
-	  this.selected = false;
-    }
-
-    public Card(int id, boolean matched)
-    {
-	  this.id = id;
-	  this.matched = matched;
 	  this.selected = false;
     }
 

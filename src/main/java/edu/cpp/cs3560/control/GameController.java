@@ -4,38 +4,60 @@ import edu.cpp.cs3560.model.*;
 import java.util.Scanner;
 
 /**
- * Controller
+ * Controller for a single game of nyt tile matc.
  */
 public class GameController
 {
-    private final GameModel model;
-    private BoardCell firstPick;
-    private boolean inputLocked = false;
-    int difficulty = 1;
-    Scanner input;
+    private final GameModel model; //model of the game.
+    private BoardCell firstPick; //first cell chosen.
+    private boolean inputLocked = false; //if the game is accepting input at this time.
+    int difficulty = 1; //difficulty level, corresponding to the number of items that need to be matched each tile.
+    Scanner input; //and input for command line app.
 
+    /**
+     * Constructor for a game controller.
+     * @param model model for the game.
+     */
     public GameController(GameModel model)
     {
 	  this.model = model;
     }
 
+    /**
+     * Constructor for a game controller, including a difficulty setting.
+     * @param model model of the game.
+     * @param difficulty corresponding to the number of items that need to be matched each tile.
+     */
     public GameController(GameModel model, int difficulty)
     {
 	  this.model = model;
 	  this.difficulty = difficulty;
     }
 
+    /**
+     * Constructor for a game controller in a CL app.
+     * @param model model of the game.
+     * @param input a scanner to get information.
+     */
     public GameController(GameModel model, Scanner input)
     {
 	  this.model = model;
 	  this.input = input;
     }
 
+    /**
+     *
+     * @return if the input is currently locked.
+     */
     public boolean isInputLocked()
     {
 	  return inputLocked;
     }
 
+    /**
+     *
+     * @return the game model.
+     */
     public GameModel getModel()
     {
 	  return model;
@@ -43,6 +65,9 @@ public class GameController
 
     /**
      * Called by the UI when the user clicks a card.
+     * @param r the row of the card clicked
+     * @param c the column of the card clicked.
+     * @param onMismatchDelay
      */
     public void onCardClicked(int r, int c, Runnable onMismatchDelay)
     {
@@ -81,7 +106,9 @@ public class GameController
     }
 
     /**
-     * Called by command line game.
+     * Called by command line game when the user clicks a card.
+     * @param r the row of the card clicked
+     * @param c the column of the card clicked.
      */
     public void onCardClicked(int r, int c)
     {
