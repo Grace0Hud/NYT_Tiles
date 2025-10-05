@@ -4,7 +4,6 @@ import edu.cpp.cs3560.model.BoardCell;
 import edu.cpp.cs3560.model.GameModel;
 import edu.cpp.cs3560.model.Card;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -22,8 +21,8 @@ public class SwingUI
     private final JPanel grid = new JPanel(new GridLayout(ROWS, COLS, 8, 8)); //panel within frame for grid.
     private final JLabel status = new JLabel("Find all matches!");
     private final JButton[][] buttons = new JButton[ROWS][COLS]; //buttons in the grid.
-    private final GameModel model = new GameModel(ROWS, COLS, System.nanoTime()); //the model of the game
-    private final GameController controller = new GameController(model); //controller for the game.
+    private final GameModel model; //the model of the game
+    private final GameController controller; //controller for the game.
     private int difficulty = 1; //difficulty level.
     private final HashMap<String, Color> themeColors = new HashMap<>(){{
 	  put("GREEN", new Color(66, 131, 49));
@@ -40,6 +39,8 @@ public class SwingUI
     public SwingUI() {
 	  //opens a dialog box to chose the difficulty before beginning.
 	  chooseDifficulty();
+	   model = new GameModel(ROWS, COLS, System.nanoTime(),difficulty);
+	   controller = new GameController(model);
 	  //setup icons according to difficulty.
 	  setUpIcons();
 	  frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -64,29 +65,44 @@ public class SwingUI
      */
     private void setUpIcons()
     {
-	  if(difficulty == 1)
+	  String[] glyphs = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+	  HashMap<Integer, String> cardGlyphs = new HashMap<>();
+	  for(int i = 0; i < ROWS * COLS * difficulty; i++)
 	  {
-		String[] glyphs = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"};
-		for (int i = 0; i < ROWS * COLS; i++)
-		{
-		    faceIcons.put(i, iconColor(themeColors.get("CREAM"), glyphs[i % glyphs.length]));
-		}
-	  }else if(difficulty == 2)
-	  {
-
-	  }else if(difficulty == 3)
-	  {
-
+		cardGlyphs.put(i, glyphs[i%glyphs.length]);
 	  }
+		String glyph = "";
+		int count = 0;
+		for(int i = 0; i < ROWS; i++)
+		{
+		    for(int j = 0; j < COLS; j++)
+		    {
+			  faceIcons.put(count, iconColor(themeColors.get("CREAM"), getCellGlyph(i,j, cardGlyphs)));
+			  count ++;
+		    }
+		}
     }
 
+    private String getCellGlyph(int r, int c, HashMap<Integer, String> icons)
+    {
+	  String glyph = "";
+	  Card[] cards = model.getBoard().getCellAt(r, c).getCards();
+	  for (int k = 0; k < cards.length; k++)
+	  {
+		//System.out.println("Key: " + cards[k].getId());
+		if(!cards[k].isMatched())
+		    glyph += icons.get(cards[k].getId()) + " ";
+	  }
+	  //System.out.println("Glyph: " + glyph);
+	  return glyph;
+    }
     /**
      * Creates a grid of buttons to be used as the board.
      */
     private void buildGrid() {
 	  for (int r=0;r<ROWS;r++) {
 		for (int c=0;c<COLS;c++) {
-		    JButton b = new JButton(faceIcons.get(model.getBoard().get(r,c).getId()));
+		    JButton b = new JButton(faceIcons.get(model.getBoard().getCellAt(r,c).getId()));
 		    b.setBackground(themeColors.get("CREAM"));
 		    b.setFocusPainted(false);
 		    int rr = r, cc = c;
@@ -141,6 +157,11 @@ public class SwingUI
 		}else if(cell.isSelected())
 		{
 		    b.setBorder(BorderFactory.createLineBorder(themeColors.get("GREEN"), 4));
+		}else if(cell.isPartialMatched())
+		{
+		    b.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		    setUpIcons();
+		    b.setIcon(faceIcons.get(cell.getId()));
 		}else
 		{
 		    b.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));

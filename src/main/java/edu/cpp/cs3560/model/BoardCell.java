@@ -1,11 +1,14 @@
 package edu.cpp.cs3560.model;
 
+import java.util.ArrayList;
+
 /**
  * Class to represent a specific cell in a board.
  */
 public class BoardCell
 {
     final int level;
+    final int id;
     private final Card[] cards;
     private boolean selected;
 
@@ -15,8 +18,22 @@ public class BoardCell
      */
     public BoardCell(int level)
     {
+	  this.id = 0;
 	  this.level = level;
 	  cards = new Card[level];
+	  initializeCards();
+    }
+
+    /**
+     * Creates a cell with a specified id.
+     * @param level
+     * @param id
+     */
+    public BoardCell(int level, int id)
+    {
+	  this.level = level;
+	  cards = new Card[level];
+	  this.id = id;
 	  initializeCards();
     }
 
@@ -29,6 +46,11 @@ public class BoardCell
 	  {
 		cards[i] = new Card(0);
 	  }
+    }
+
+    public int getId()
+    {
+	  return id;
     }
 
     public int getLevel()
@@ -122,6 +144,28 @@ public class BoardCell
 	  cards[level].markMatched();
     }
 
+    public ArrayList<Card> getMatchedCards()
+    {
+	  ArrayList<Card> out = new ArrayList<>();
+	  for(Card card : cards)
+	  {
+		if(card.isMatched())
+		    out.add(card);
+
+	  }
+	  return out;
+    }
+    public boolean isPartialMatched()
+    {
+	  for(int i = 0; i < level; i++)
+	  {
+		if (cards[i].isMatched())
+		{
+		    return true;
+		}
+	  }
+	  return false;
+    }
     public boolean isAllMatched()
     {
 	  return checkAllMatched();

@@ -91,6 +91,8 @@ public class GameController
 		if (firstPick.matchCell(cell)) //there is a match
 		{
 		    model.incrementScore();
+		    firstPick.deSelectCell();
+		    cell.deSelectCell();
 		    firstPick = null;
 		} else //not a match.
 		{

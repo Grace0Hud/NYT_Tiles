@@ -64,11 +64,14 @@ public class Board
      */
     private void initializeBoardCells()
     {
+	  int count = 0;
 	  for(int r = 0; r < rows; r++)
 	  {
 		for(int c = 0; c < cols; c++)
 		{
-		    grid[r][c] = new BoardCell(level);
+		    //System.out.println("Initializing board cell " + count);
+		    grid[r][c] = new BoardCell(level, count);
+		    count++;
 		}
 	  }
     }
@@ -89,7 +92,7 @@ public class Board
     {
 	  // Need to shuffle cards to make sure the cards are in random orders each time.
 	  Collections.shuffle(ids, new Random(seed));
-	  //System.out.println("Ids: " + ids.toString());
+	  System.out.println("Ids: " + ids.toString());
 	  int count = 0;
 	  for (int r = 0; r < rows; r++)
 	  {
