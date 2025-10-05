@@ -5,6 +5,8 @@ import edu.cpp.cs3560.model.Card;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +19,7 @@ public class SwingUI
     private final JButton[][] buttons = new JButton[ROWS][COLS];
     private final GameModel model = new GameModel(ROWS, COLS, System.nanoTime());
     private final GameController controller = new GameController(model);
-
+    private int difficulty = 1;
     private final HashMap<String, Color> themeColors = new HashMap<>(){{
 	  put("GREEN", new Color(66, 131, 49));
 	  put("BROWN", new Color(78, 50, 15));
@@ -29,7 +31,8 @@ public class SwingUI
 
 
     public SwingUI() {
-	// Build simple emoji “faces” per id:
+	  chooseDifficulty();
+	  // Build simple emoji “faces” per id:
 	  String[] glyphs = {"A","B","C","D","E","F","G","H","I","J","K"};
 	  for (int i = 0; i < ROWS*COLS; i++)
 	  {
@@ -107,7 +110,7 @@ public class SwingUI
 		    b.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		}
 	  }
-	  status.setText(model.toString());
+	  status.setText("Difficulty: " + difficulty + "   " + model.toString());
     }
     private Icon iconColor(Color bg, String text) {
 	  int W=120, H=150;
@@ -123,6 +126,45 @@ public class SwingUI
 	  g.drawString(text, (W - tw)/2, H/2 + fm.getAscent()/2 - 8);
 	  g.dispose();
 	  return new ImageIcon(img);
+    }
+
+    private void chooseDifficulty()
+    {
+	  JDialog dialog = new JDialog(frame, "Choose Difficulty", true);
+	  dialog.setForeground(themeColors.get("CREAM"));
+	  dialog.setSize(300, 100);
+	  JPanel panel = new JPanel();
+	  dialog.setBackground(themeColors.get("BROWN"));
+	  panel.setBackground(themeColors.get("BROWN"));
+	  String[] options = {"Easy", "Medium", "Hard"};
+	  JLabel label = new JLabel("Choose Difficulty");
+	  label.setForeground(themeColors.get("CREAM"));
+	  panel.add(label);
+	  JComboBox selector = new JComboBox(options);
+	  selector.setBackground(themeColors.get("CREAM"));
+	  selector.setForeground(themeColors.get("GREEN"));
+	  panel.add(selector);
+	  selector.addItemListener(new ItemListener()
+	  {
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+		    if(selector.getSelectedItem().equals("Hard"))
+		    {
+			  difficulty = 3;
+		    }else if (selector.getSelectedItem().equals("Medium"))
+		    {
+			  difficulty = 2;
+		    }
+		}
+	  });
+	  JButton ok = new JButton("OK");
+	  ok.setBackground(themeColors.get("GREEN"));
+	  ok.addActionListener(e -> {
+		dialog.dispose();
+	  });
+	  panel.add(ok);
+	  dialog.add(panel);
+	  dialog.setVisible(true);
     }
     public static void main(String[] args) {
 	  SwingUtilities.invokeLater(SwingUI::new);
