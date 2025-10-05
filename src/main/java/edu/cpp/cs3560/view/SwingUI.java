@@ -3,6 +3,7 @@ import edu.cpp.cs3560.control.GameController;
 import edu.cpp.cs3560.model.GameModel;
 import edu.cpp.cs3560.model.Card;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -23,11 +24,10 @@ public class SwingUI
 
     public SwingUI() {
 	// Build simple emoji “faces” per id:
-	  String[] glyphs = {"￿","￿","￿","￿","￿","￿","￿","￿",
-		    "￿","￿","￿","￿","￿","￿","￿","￿"};
-	  for (int i = 0; i < ROWS*COLS/2; i++) {
-		faceIcons.put(i, iconColor(new Color(230,230,230), glyphs[i %
-			  glyphs.length]));
+	  String[] glyphs = {"A","B","C","D","E","F","G","H","I","J","K"};
+	  for (int i = 0; i < ROWS*COLS; i++)
+	  {
+		faceIcons.put(i, iconColor(new Color(230, 230, 230), glyphs[i%glyphs.length]));
 	  }
 	  frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	  frame.setLayout(new BorderLayout(10,10));
@@ -44,7 +44,7 @@ public class SwingUI
     private void buildGrid() {
 	  for (int r=0;r<ROWS;r++) {
 		for (int c=0;c<COLS;c++) {
-		    JButton b = new JButton(backIcon);
+		    JButton b = new JButton(faceIcons.get(model.getBoard().get(r,c).getId()));
 		    b.setFocusPainted(false);
 		    int rr = r, cc = c;
 		    b.addActionListener(e -> onClick(rr, cc));
@@ -83,14 +83,20 @@ public class SwingUI
 	  if (controller.isWin()) status.setText("You win! " + model.toString());
     }
     private void refresh() {
-	  for (int r=0;r<ROWS;r++) for (int c=0;c<COLS;c++) {
+	  for (int r=0;r<ROWS;r++) for (int c=0;c<COLS;c++)
+	  {
 		Card card = model.getBoard().get(r,c);
 		JButton b = buttons[r][c];
-		if (card.isSelected() || card.isMatched())
-		    b.setIcon(faceIcons.get(card.getId()));
-		else
+		if(card.isMatched())
+		{
 		    b.setIcon(backIcon);
-		b.setEnabled(!card.isMatched());
+		}else if(card.isSelected())
+		{
+		    b.setBorder(new LineBorder(Color.RED));
+		}else
+		{
+		    b.setBorder(new LineBorder(Color.BLACK));
+		}
 	  }
 	  status.setText(model.toString());
     }

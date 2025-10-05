@@ -44,9 +44,10 @@ public class GameController
 
 	  Card card = model.getBoard().get(r, c);
 	  //not a valid match card. Do nothing and return.
-	  if (card.isMatched()) return;
+	  if (card.isMatched() || card.isSelected()) return;
 	  //increment move count
 	  model.incrementMoves();
+	  card.setSelected(true);
 
 	  if (firstPick == null) //if this is the first pick, set this card as the first pick.
 	  {
@@ -153,6 +154,8 @@ public class GameController
      */
     public void resolveMismatch(Card a, Card b)
     {
+	  a.setSelected(false);
+	  b.setSelected(false);
 	  inputLocked = false;
     }
     public boolean isWin() { return model.getBoard().allMatched(); }
