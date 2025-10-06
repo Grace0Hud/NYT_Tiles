@@ -84,6 +84,26 @@ class BoardTest {
     }
 
     @Test
+    void multiLevelAllMatch()
+    {
+	  Board board2 = new Board(2,2,System.currentTimeMillis(), 2);
+	  System.out.println(board2);
+	  for(int i = 0 ; i < board2.getRows() ; i++)
+	  {
+		for(int j = 0 ; j < board2.getCols() ; j++)
+		{
+		    Card[] cards = board2.getCardsAt(i,j);
+		}
+	  }
+    }
+
+    @Test
+    void multiLevelCheckAllIds()
+    {
+	  Board board2 = new Board(4,4,System.currentTimeMillis(), 3);
+	  System.out.println(board2);
+    }
+    @Test
     void testToString()
     {
 	  String expected = board.get(0,0).toString() + " |" + board.get(0,1).toString()

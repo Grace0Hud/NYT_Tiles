@@ -48,15 +48,38 @@ public class Board
 	  this.rows = rows; this.cols = cols; this.level = level;
 	  this.grid = new BoardCell[rows][cols];
 	  // Create pair ids: 0..(nPairs-1) twice
-	  int n = rows * cols * level;
+	  int n = rows * cols;
 	  //System.out.println("n: " + n);
-	  for (int i = 0; i < n / 2; i++)
+	  for (int i = 0; i < n/2; i++)
 	  {
-		ids.add(i); ids.add(i);
+		for(int j =0; j < level; j++)
+		{
+		    ids.add(i); ids.add(i);
+		}
 	  }
+	  System.out.println("Number of ids: " + ids.size());
 	  // Need to shuffle cards to make sure the cards are in random orders each time.
 	  initializeBoardCells();
 	  shuffleCards(seed);
+    }
+
+    public Card[] getAllCards()
+    {
+	  int n = 0;
+	  Card[] cards = new Card[rows*cols];
+	  for(int i = 0; i < rows; i++)
+	  {
+		for(int j = 0; j < cols; j++)
+		{
+		    Card[] localCards = grid[i][j].getCards();
+		    for(int k = 0; k < localCards.length; k++)
+		    {
+			  cards[n] = localCards[k];
+			  n++;
+		    }
+		}
+	  }
+	  return cards;
     }
 
     /**
@@ -88,33 +111,77 @@ public class Board
      * For boards with level > 1, ensures that cards in the same cell do not have the same id.
      * @param seed a seed to generate random numbers.
      */
-    public void shuffleCards(long seed)
-    {
-	  // Need to shuffle cards to make sure the cards are in random orders each time.
+    public void shuffleCards(long seed) {
+
+	  // --- STEP 1: PREPARE THE MASTER ID LIST ---
+	  // The 'ids' list should already contain 6 repetitions of each of your 8 unique IDs,
+	  // totaling 48 elements. We use this list as the master pool.
+
+	  // --- STEP 2: SHUFFLE THE MASTER LIST ---
+	  // Shuffle the entire list to randomize the distribution across the board.
 	  Collections.shuffle(ids, new Random(seed));
-	  System.out.println("Ids: " + ids.toString());
-	  int count = 0;
-	  for (int r = 0; r < rows; r++)
-	  {
-		for (int c = 0; c < cols; c++)
-		{
-		    //for multiple levels, we need to make sure that one spot on the board doesn't have two of the same id.
-		    List<Integer> temp = new ArrayList<>(ids.subList(count, ids.size()));
-		    //System.out.println("Temp at count = " + count + ":  " + temp.toString());
-		    for (int l = 0; l < level; l++)
-		    {
-			  int id = temp.get(0);
-			  grid[r][c].setCardAt(l,new Card(id));
-			  //removing all instances of this from the temporary list.
-			  ArrayList toRemove = new ArrayList();
-			  toRemove.add(id);
-			  temp.removeAll(toRemove);
-			  //System.out.println("Tenp after removal: " + temp.toString());
-			  //System.out.println("Ids after removal: " + ids.toString());
+
+	  // --- STEP 3 & 4: ASSIGN IDS IN BLOCKS WITH LOCAL VALIDATION ---
+
+	  int totalCells = rows * cols;
+	  int currentIdIndex = 0;
+
+	  for (int r = 0; r < rows; r++) {
+		for (int c = 0; c < cols; c++) {
+
+		    // This list will hold the 'level' (3) unique IDs for the current cell
+		    int[] idList = new int[level];
+
+		    // A Set is used for fast, easy checking of local duplicates.
+		    Set<Integer> assignedIds = new HashSet<>();
+
+		    for (int k = 0; k < level; k++) {
+
+			  // Get the next ID from the master shuffled list
+			  int candidateId = ids.get(currentIdIndex);
+
+			  // --- LOCAL VALIDATION LOOP ---
+			  // If the candidateId is already in the 'assignedIds' set for this cell,
+			  // we must swap it with an ID later in the master list.
+			  while (assignedIds.contains(candidateId)) {
+
+				// The simplest fix is to swap the current repeating ID
+				// with an ID from the END of the unassigned portion of the master list.
+
+				// 1. Find the index of the last unassigned ID:
+				int lastUnassignedIndex = ids.size() - 1;
+
+				// 2. Perform the swap:
+				// This moves the duplicate ID away, and brings a new, unseen ID into play.
+				Collections.swap(ids, currentIdIndex, lastUnassignedIndex);
+
+				// 3. Update the candidateId after the swap (it now points to the new ID)
+				candidateId = ids.get(currentIdIndex);
+
+				// Note: This swap means the ID that was moved to the end might violate
+				// a future cell's constraint, but the overall distribution remains uniform.
+			  }
+
+			  // The candidateId is now guaranteed to be unique for this cell.
+			  idList[k] = candidateId;
+			  assignedIds.add(candidateId);
+			  // Move to the next ID in the master list
+			  currentIdIndex++;
 		    }
-		    count++;
+
+		    // --- ASSIGN TO CELL ---
+		    // You'll need to call a method here to store the idList array in your card/cell object
+		    // e.g., cards[r][c].setIds(idList);
+		    for(int i = 0; i < idList.length; i++)
+		    {
+			  grid[r][c].setCardAt(i, new Card(idList[i]));
+		    }
+
+		    // DEBUGGING: Print the cell's IDs and ensure uniqueness
+		    System.out.println("Cell (" + r + ", " + c + ") assigned IDs: " + Arrays.toString(idList));
 		}
 	  }
+	  System.out.println(toString());
     }
 
     /**

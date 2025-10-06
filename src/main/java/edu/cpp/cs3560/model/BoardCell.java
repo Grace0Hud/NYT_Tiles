@@ -108,7 +108,7 @@ public class BoardCell
 	  Card[] otherCards = other.getCards();
 	  for(int i = 0; i < other.getLevel(); i++)
 	  {
-		if (this.matchCard(otherCards[i].getId()))
+		if (!otherCards[i].isMatched() && this.matchCard(otherCards[i].getId()))
 		{
 		    other.markCardMatched(i);
 		    return true;

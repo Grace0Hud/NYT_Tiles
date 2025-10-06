@@ -65,9 +65,19 @@ public class SwingUI
      */
     private void setUpIcons()
     {
-	  String[] glyphs = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+	  String[] glyphs;
+	  if(difficulty == 1)
+	  {
+		glyphs = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
+	  }else if(difficulty == 2)
+	  {
+		glyphs = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K","L","M","N","O","P"};
+	  }else
+	  {
+		glyphs = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X"};
+	  }
 	  HashMap<Integer, String> cardGlyphs = new HashMap<>();
-	  for(int i = 0; i < ROWS * COLS * difficulty; i++)
+	  for(int i = 0; i < ROWS * COLS; i++)
 	  {
 		cardGlyphs.put(i, glyphs[i%glyphs.length]);
 	  }
@@ -91,7 +101,8 @@ public class SwingUI
 	  {
 		//System.out.println("Key: " + cards[k].getId());
 		if(!cards[k].isMatched())
-		    glyph += icons.get(cards[k].getId()) + " ";
+		    glyph += cards[k].getId() + " ";
+		    //glyph += icons.get(cards[k].getId()) + " ";
 	  }
 	  //System.out.println("Glyph: " + glyph);
 	  return glyph;
