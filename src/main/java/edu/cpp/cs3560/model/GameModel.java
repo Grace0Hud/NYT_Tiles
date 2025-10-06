@@ -4,7 +4,7 @@ package edu.cpp.cs3560.model;
  */
 public class GameModel
 {
-    private final Board board; //the board for gameplay.
+    private Board board; //the board for gameplay.
     private int score = 0; //the current score.
     private int numMoves = 0; //the number of moves that have been taken.
     private int incorrectMoves = 0;
@@ -32,6 +32,22 @@ public class GameModel
     {
 	  incorrectMoves++;
 	  score--;
+    }
+
+    public void resetGame()
+    {
+	  score = 0;
+	  numMoves = 0;
+	  incorrectMoves = 0;
+	  board.resetBoard();
+    }
+
+    public void resetGame(int level)
+    {
+	  score = 0;
+	  numMoves = 0;
+	  incorrectMoves = 0;
+	  board = new Board(board.getRows(), board.getCols(), System.currentTimeMillis(), level);
     }
 
     @Override

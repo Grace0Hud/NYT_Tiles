@@ -106,6 +106,14 @@ public class Board
 	  return level;
     }
 
+    public void resetBoard()
+    {
+	  for(BoardCell[] cells: grid)
+		for(BoardCell cell: cells)
+		    cell.resetCell();
+	  shuffleCards(System.currentTimeMillis());
+    }
+
     /**
      * Shuffles the card ids.
      * For boards with level > 1, ensures that cards in the same cell do not have the same id.
@@ -178,7 +186,7 @@ public class Board
 		    }
 
 		    // DEBUGGING: Print the cell's IDs and ensure uniqueness
-		    System.out.println("Cell (" + r + ", " + c + ") assigned IDs: " + Arrays.toString(idList));
+		    //System.out.println("Cell (" + r + ", " + c + ") assigned IDs: " + Arrays.toString(idList));
 		}
 	  }
 	  System.out.println(toString());

@@ -155,27 +155,31 @@ public class SwingUI
 		}) {{ setRepeats(false); }}.start();
 	  });
 	  refresh();
-	  if (controller.isWin()) status.setText("You win! " + model.toString());
+	  if (controller.isWin())
+	  {
+		status.setText("You win! " + model.toString());
+		gameOver(true);
+	  }
     }
     private void refresh() {
+	  //System.out.println("REFRESH!");
 	  for (int r=0;r<ROWS;r++) for (int c=0;c<COLS;c++)
 	  {
 		BoardCell cell = model.getBoard().getCellAt(r,c);
 		JButton b = buttons[r][c];
 		if(cell.isAllMatched())
 		{
+		    //System.out.println("All Matched");
 		    b.setIcon(backIcon);
 		}else if(cell.isSelected())
 		{
+		    //System.out.println("Selected");
 		    b.setBorder(BorderFactory.createLineBorder(themeColors.get("GREEN"), 4));
-		}else if(cell.isPartialMatched())
+		}else
 		{
 		    b.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		    setUpIcons();
 		    b.setIcon(faceIcons.get(cell.getId()));
-		}else
-		{
-		    b.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		}
 	  }
 	  status.setText("Difficulty: " + difficulty + "   " + model.toString());
@@ -203,6 +207,52 @@ public class SwingUI
 	  return new ImageIcon(img);
     }
 
+    private void gameOver(boolean win)
+    {
+	  JDialog dialog = new JDialog(frame, "Choose Difficulty", true);
+	  dialog.setForeground(themeColors.get("CREAM"));
+	  dialog.setSize(500, 100);
+	  //creating a panel within the dialog to setup the visible selector.
+	  JPanel panel = new JPanel();
+	  dialog.setBackground(themeColors.get("BROWN"));
+	  panel.setBackground(themeColors.get("BROWN"));
+
+	  String congrats = "";
+	  if(win)
+	  {
+		congrats += "You won!";
+	  }else
+	  {
+		congrats += "You lost!";
+	  }
+	  congrats += "...... Play Again?";
+	  JLabel label = new JLabel(congrats);
+	  label.setForeground(themeColors.get("CREAM"));
+	  panel.add(label);
+	  //button to submit and move forward.
+	  JButton ok = new JButton("Yes!");
+	  ok.setBackground(themeColors.get("GREEN"));
+	  ok.addActionListener(e -> {
+		dialog.dispose();
+		chooseDifficulty();
+		model.resetGame(difficulty);
+		refresh();
+	  });
+
+	  JButton no = new JButton("No...");
+	  no.setBackground(themeColors.get("GREEN"));
+	  no.addActionListener(e -> {
+		dialog.dispose();
+		System.exit(0);
+	  });
+	  //adding dialog to panel and setting visible.
+	  panel.add(ok);
+	  panel.add(no);
+	  dialog.add(panel);
+	  dialog.pack();
+	  dialog.setLocationRelativeTo(frame);
+	  dialog.setVisible(true);
+    }
     /**
      * Opens up a dialog box to get the user to select difficulty from a drop down.
      */
@@ -246,6 +296,8 @@ public class SwingUI
 	  });
 	  //adding dialog to panel and setting visible.
 	  panel.add(ok);
+	  dialog.pack();
+	  dialog.setLocationRelativeTo(frame);
 	  dialog.add(panel);
 	  dialog.setVisible(true);
     }

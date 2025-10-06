@@ -58,6 +58,15 @@ public class BoardCell
 	  return level;
     }
 
+    public void resetCell()
+    {
+	  deSelectCell();
+	  for(Card card : cards)
+	  {
+		card.setMatched(false);
+	  }
+    }
+
     public int getIdAt(int level)
     {
 	  return cards[level].getId();
