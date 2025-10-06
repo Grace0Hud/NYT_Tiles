@@ -1,6 +1,11 @@
 package edu.cpp.cs3560.control;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.cpp.cs3560.model.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -8,7 +13,7 @@ import java.util.Scanner;
  */
 public class GameController
 {
-    private final GameModel model; //model of the game.
+    private GameModel model; //model of the game.
     private BoardCell firstPick; //first cell chosen.
     private boolean inputLocked = false; //if the game is accepting input at this time.
     int difficulty = 1; //difficulty level, corresponding to the number of items that need to be matched each tile.
@@ -145,6 +150,33 @@ public class GameController
 		    // After delay, UI must call controller.resolveMismatch(a,b)
 		}
 	  }
+    }
+
+    public void saveState() throws IOException
+    {
+	  ObjectMapper objectMapper = new ObjectMapper();
+	  ObjectNode jsonNode = objectMapper.createObjectNode();
+	  ObjectNode modelState = objectMapper.valueToTree(model);
+	  jsonNode.set("GameState",modelState);
+	  if(firstPick == null)
+	  {
+		jsonNode.set("firstPickState", null);
+
+	  }else {
+		ObjectNode firstPickState = objectMapper.valueToTree(firstPick);
+		jsonNode.set("firstPickState",firstPickState);
+	  }
+	  //System.out.println(new File("").getAbsolutePath());
+	 objectMapper.writeValue(new File("src/states/gameState.json"), jsonNode);
+    }
+
+    public void loadState(String filepath) throws IOException
+    {
+	  ObjectMapper objectMapper = new ObjectMapper();
+	  JsonNode jsonNode = objectMapper.readTree(new File(filepath));
+	  int difficulty = jsonNode.get("difficulty").asInt();
+	  JsonNode boardState = jsonNode.get("boardState");
+	  model = objectMapper.treeToValue(boardState,GameModel.class);
     }
     /**
      * To run the command line game.

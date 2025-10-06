@@ -1,13 +1,21 @@
 package edu.cpp.cs3560.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import edu.cpp.cs3560.serializer.BoardCellSerializer;
+import edu.cpp.cs3560.serializer.BoardSerializer;
+
 import java.util.ArrayList;
 
 /**
  * Class to represent a specific cell in a board.
  */
+@JsonSerialize(using = BoardCellSerializer.class)
 public class BoardCell
 {
+    @JsonIgnore
     final int level;
+    @JsonIgnore
     final int id;
     private final Card[] cards;
     private boolean selected;
@@ -35,6 +43,13 @@ public class BoardCell
 	  cards = new Card[level];
 	  this.id = id;
 	  initializeCards();
+    }
+
+    public BoardCell(int level, Card[] cards)
+    {
+	  this.id = 0;
+	  this.level = level;
+	  this.cards = cards;
     }
 
     /**
@@ -105,9 +120,11 @@ public class BoardCell
 
     /**
      * Checks if the cell has matching ids to another cell.
+     *
      * @param other a board cell other than this one.
      * @return if the cell has a card which matches this cell.
      */
+    @JsonIgnore
     public boolean matchCell(BoardCell other)
     {
 	  if (other == null || other.level != level)
@@ -115,7 +132,7 @@ public class BoardCell
 		return false;
 	  }
 	  Card[] otherCards = other.getCards();
-	  for(int i = 0; i < other.getLevel(); i++)
+	  for (int i = 0; i < other.getLevel(); i++)
 	  {
 		if (!otherCards[i].isMatched() && this.matchCard(otherCards[i].getId()))
 		{
@@ -128,14 +145,16 @@ public class BoardCell
 
     /**
      * Checks to see if the cell has and id which matches the one provided.
+     *
      * @param id the id of the card to check against.
      * @return if the cell has a card with a matching id.
      */
+    @JsonIgnore
     public boolean matchCard(int id)
     {
-	  for(Card card : cards)
+	  for (Card card : cards)
 	  {
-		if(card.getId() == id && !card.isMatched())
+		if (card.getId() == id && !card.isMatched())
 		{
 		    card.markMatched();
 		    return true;
@@ -153,28 +172,6 @@ public class BoardCell
 	  cards[level].markMatched();
     }
 
-    public ArrayList<Card> getMatchedCards()
-    {
-	  ArrayList<Card> out = new ArrayList<>();
-	  for(Card card : cards)
-	  {
-		if(card.isMatched())
-		    out.add(card);
-
-	  }
-	  return out;
-    }
-    public boolean isPartialMatched()
-    {
-	  for(int i = 0; i < level; i++)
-	  {
-		if (cards[i].isMatched())
-		{
-		    return true;
-		}
-	  }
-	  return false;
-    }
     public boolean isAllMatched()
     {
 	  return checkAllMatched();
