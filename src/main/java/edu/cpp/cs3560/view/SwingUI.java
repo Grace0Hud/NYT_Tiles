@@ -46,6 +46,21 @@ public class SwingUI
 	  frame.setLayout(new BorderLayout(10,10));
 	  JPanel top = new JPanel(new BorderLayout());
 	  top.add(status, BorderLayout.WEST);
+	  top.setBackground(themeColors.get("BROWN"));
+	  top.setForeground(themeColors.get("CREAM"));
+	  status.setForeground(themeColors.get("CREAM"));
+	  JButton save = new JButton("save");
+	  save.setBackground(themeColors.get("GREEN"));
+	  save.addActionListener(e -> {
+		try
+		{
+		    controller.saveState();
+		} catch (IOException ex)
+		{
+		    throw new RuntimeException(ex);
+		}
+	  });
+	  top.add(save, BorderLayout.EAST);
 	  frame.add(top, BorderLayout.NORTH);
 	  frame.add(grid, BorderLayout.CENTER);
 	  grid.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -181,7 +196,7 @@ public class SwingUI
 		    b.setIcon(faceIcons.get(cell.getId()));
 		}
 	  }
-	  status.setText("Difficulty: " + difficulty + "   " + controller.getModel().toString());
+	  status.setText(controller.getModel().toString());
     }
 
     /**
