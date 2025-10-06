@@ -101,8 +101,8 @@ public class SwingUI
 	  {
 		//System.out.println("Key: " + cards[k].getId());
 		if(!cards[k].isMatched())
-		    glyph += cards[k].getId() + " ";
-		    //glyph += icons.get(cards[k].getId()) + " ";
+		    //glyph += cards[k].getId() + " ";
+		    glyph += icons.get(cards[k].getId()) + "   ";
 	  }
 	  //System.out.println("Glyph: " + glyph);
 	  return glyph;

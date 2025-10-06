@@ -31,6 +31,7 @@ public class GameModel
     public void incrementIncorr()
     {
 	  incorrectMoves++;
+	  score--;
     }
 
     @Override
