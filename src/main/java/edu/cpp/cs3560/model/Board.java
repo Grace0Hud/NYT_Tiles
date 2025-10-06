@@ -2,6 +2,8 @@ package edu.cpp.cs3560.model;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.cpp.cs3560.model.*;
 import edu.cpp.cs3560.serializer.BoardSerializer;
@@ -84,7 +86,12 @@ public class Board
 	  shuffleCards(seed);
     }
 
-    public Board(int rows, int cols, int level, Card[][][] cards)
+    @JsonCreator
+    public Board(
+		@JsonProperty("rows") int rows,
+		@JsonProperty("cols") int cols,
+		@JsonProperty("level") int level,
+		@JsonProperty("cells") BoardCell[][] cells)
     {
 	  this.rows = rows;
 	  this.cols = cols;
@@ -94,7 +101,7 @@ public class Board
 	  {
 		for (int j = 0; j < cols; j++)
 		{
-		    grid[i][j] = new BoardCell(level, cards[i][j]);
+		    grid[i][j] = cells[i][j];
 		}
 	  }
     }

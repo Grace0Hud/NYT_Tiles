@@ -1,6 +1,8 @@
 package edu.cpp.cs3560.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.cpp.cs3560.serializer.BoardCellSerializer;
 import edu.cpp.cs3560.serializer.BoardSerializer;
@@ -45,9 +47,14 @@ public class BoardCell
 	  initializeCards();
     }
 
-    public BoardCell(int level, Card[] cards)
+    @JsonCreator
+    public BoardCell(
+		@JsonProperty("level") int level,
+		@JsonProperty("isSelected") boolean selected,
+		@JsonProperty("cards") Card[] cards)
     {
 	  this.id = 0;
+	  this.selected = selected;
 	  this.level = level;
 	  this.cards = cards;
     }

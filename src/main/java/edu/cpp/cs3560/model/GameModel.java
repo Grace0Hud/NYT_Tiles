@@ -1,4 +1,8 @@
 package edu.cpp.cs3560.model;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Model for how an individual game proceeds.
  */
@@ -16,6 +20,11 @@ public class GameModel
     public GameModel(int rows, int cols, long seed, int level)
     {
 	  this.board = new Board(rows, cols, seed, level);
+    }
+    @JsonCreator
+    public GameModel(@JsonProperty("board") Board board)
+    {
+	  this.board = board;
     }
     public Board getBoard() { return board; }
     public int getScore() { return score; }

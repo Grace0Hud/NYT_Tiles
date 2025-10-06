@@ -12,17 +12,18 @@ public class CLApp
 	  Scanner input = new Scanner(System.in);
 	  GameModel model = new GameModel(4,4, System.currentTimeMillis(), 2);
 	  GameController game = new GameController(model, input);
+	  try{
+		game.saveState();
+	  }catch(Exception e){
+		System.out.println(e);
+	  }
 	  try
 	  {
 		game.loadState("src/states/gameState.json");
 	  } catch (IOException e)
 	  {
-		System.out.println("Error loading game state");
+		System.out.println(e);
 	  }
-//	  try{
-//		game.saveState();
-//	  }catch(Exception e){
-//		System.out.println(e);
-//	  }
+
     }
 }

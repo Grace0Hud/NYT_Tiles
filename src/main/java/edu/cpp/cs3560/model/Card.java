@@ -1,5 +1,8 @@
 package edu.cpp.cs3560.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Class to track a single card.
  */
@@ -21,6 +24,16 @@ public class Card
 	  this.selected = false;
     }
 
+    @JsonCreator
+    public Card(
+		@JsonProperty("id") int id,
+		@JsonProperty("matched") boolean matched,
+		@JsonProperty("selected") boolean selected)
+    {
+	  this.id = id;
+	  this.matched = matched;
+	  this.selected = selected;
+    }
     public int getId()
     {
 	  return id;

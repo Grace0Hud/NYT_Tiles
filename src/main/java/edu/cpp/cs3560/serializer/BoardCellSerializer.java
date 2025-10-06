@@ -31,6 +31,7 @@ public class BoardCellSerializer extends StdSerializer<BoardCell>
 	  // Start the JSON object for the Board
 	  jgen.writeStartObject();
 
+	  jgen.writeNumberField("level", cell.getLevel());
 	  jgen.writeBooleanField("isSelected", cell.isSelected());
 
 	  // --- 1. Serialize the 2D array of BoardCells as a single, flat array (Recommended) ---

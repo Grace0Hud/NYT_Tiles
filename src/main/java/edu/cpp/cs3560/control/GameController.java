@@ -174,9 +174,8 @@ public class GameController
     {
 	  ObjectMapper objectMapper = new ObjectMapper();
 	  JsonNode jsonNode = objectMapper.readTree(new File(filepath));
-	  int difficulty = jsonNode.get("difficulty").asInt();
-	  JsonNode boardState = jsonNode.get("boardState");
-	  model = objectMapper.treeToValue(boardState,GameModel.class);
+	  JsonNode gameState = jsonNode.get("GameState");
+	  model = objectMapper.treeToValue(gameState,GameModel.class);
     }
     /**
      * To run the command line game.
