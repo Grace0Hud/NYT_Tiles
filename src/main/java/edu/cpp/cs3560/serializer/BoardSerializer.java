@@ -32,7 +32,7 @@ public class BoardSerializer extends StdSerializer<Board>
 	  jgen.writeStartObject();
 	  jgen.writeNumberField("rows", board.getRows());
 	  jgen.writeNumberField("cols", board.getCols());
-	  jgen.writeNumberField("levels", board.getLevel());
+	  jgen.writeNumberField("level", board.getLevel());
 	  // --- 1. Serialize the 2D array of BoardCells as a single, flat array (Recommended) ---
 
 	  // This approach avoids the 2D array structure in JSON, which is often cleaner.

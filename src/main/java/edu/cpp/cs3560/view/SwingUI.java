@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,8 +22,8 @@ public class SwingUI
     private final JPanel grid = new JPanel(new GridLayout(ROWS, COLS, 8, 8)); //panel within frame for grid.
     private final JLabel status = new JLabel("Find all matches!");
     private final JButton[][] buttons = new JButton[ROWS][COLS]; //buttons in the grid.
-    private final GameModel model; //the model of the game
-    private final GameController controller; //controller for the game.
+    private GameModel model; //the model of the game
+    private GameController controller; //controller for the game.
     private int difficulty = 1; //difficulty level.
     private final HashMap<String, Color> themeColors = new HashMap<>(){{
 	  put("GREEN", new Color(66, 131, 49));
@@ -39,8 +40,7 @@ public class SwingUI
     public SwingUI() {
 	  //opens a dialog box to chose the difficulty before beginning.
 	  chooseDifficulty();
-	   model = new GameModel(ROWS, COLS, System.nanoTime(),difficulty);
-	   controller = new GameController(model);
+
 	  //setup icons according to difficulty.
 	  setUpIcons();
 	  frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -292,10 +292,28 @@ public class SwingUI
 	  JButton ok = new JButton("OK");
 	  ok.setBackground(themeColors.get("GREEN"));
 	  ok.addActionListener(e -> {
+		model = new GameModel(ROWS, COLS, System.nanoTime(),difficulty);
+		dialog.dispose();
+	  });
+	  ;
+	  JButton load = new JButton("Load");
+	  load.setBackground(themeColors.get("GREEN"));
+	  load.addActionListener(e -> {
+		try
+		{
+		    model = new GameModel(ROWS, COLS, System.nanoTime(),1);
+		    controller = new GameController(model);
+		    controller.loadState("src/states/gameState.json");
+		    //refresh();
+		} catch (IOException ex)
+		{
+		    throw new RuntimeException(ex);
+		}
 		dialog.dispose();
 	  });
 	  //adding dialog to panel and setting visible.
 	  panel.add(ok);
+	  panel.add(load);
 	  dialog.pack();
 	  dialog.setLocationRelativeTo(frame);
 	  dialog.add(panel);

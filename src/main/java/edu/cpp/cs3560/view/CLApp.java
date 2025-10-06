@@ -20,6 +20,7 @@ public class CLApp
 	  try
 	  {
 		game.loadState("src/states/gameState.json");
+		System.out.println(model.toString());
 	  } catch (IOException e)
 	  {
 		System.out.println(e);
