@@ -49,11 +49,12 @@ public class BoardCell
 
     @JsonCreator
     public BoardCell(
+		@JsonProperty("id") int id,
 		@JsonProperty("level") int level,
 		@JsonProperty("isSelected") boolean selected,
 		@JsonProperty("cards") Card[] cards)
     {
-	  this.id = 0;
+	  this.id = id;
 	  this.selected = selected;
 	  this.level = level;
 	  this.cards = cards;

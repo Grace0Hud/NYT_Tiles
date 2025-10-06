@@ -22,8 +22,8 @@ public class SwingUI
     private final JPanel grid = new JPanel(new GridLayout(ROWS, COLS, 8, 8)); //panel within frame for grid.
     private final JLabel status = new JLabel("Find all matches!");
     private final JButton[][] buttons = new JButton[ROWS][COLS]; //buttons in the grid.
-    private GameModel model; //the model of the game
-    private GameController controller; //controller for the game.
+    private GameModel model = new GameModel(ROWS,COLS, System.currentTimeMillis()); //the model of the game
+    private GameController controller = new GameController(model) ; //controller for the game.
     private int difficulty = 1; //difficulty level.
     private final HashMap<String, Color> themeColors = new HashMap<>(){{
 	  put("GREEN", new Color(66, 131, 49));
@@ -38,9 +38,8 @@ public class SwingUI
      * Constructs the frame for the swing UI.
      */
     public SwingUI() {
-	  //opens a dialog box to chose the difficulty before beginning.
+	  //opens a dialog box to choose the difficulty before beginning.
 	  chooseDifficulty();
-
 	  //setup icons according to difficulty.
 	  setUpIcons();
 	  frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -96,7 +95,7 @@ public class SwingUI
     private String getCellGlyph(int r, int c, HashMap<Integer, String> icons)
     {
 	  String glyph = "";
-	  Card[] cards = model.getBoard().getCellAt(r, c).getCards();
+	  Card[] cards = controller.getModel().getBoard().getCellAt(r, c).getCards();
 	  for (int k = 0; k < cards.length; k++)
 	  {
 		//System.out.println("Key: " + cards[k].getId());
@@ -113,7 +112,7 @@ public class SwingUI
     private void buildGrid() {
 	  for (int r=0;r<ROWS;r++) {
 		for (int c=0;c<COLS;c++) {
-		    JButton b = new JButton(faceIcons.get(model.getBoard().getCellAt(r,c).getId()));
+		    JButton b = new JButton(faceIcons.get(controller.getModel().getBoard().getCellAt(r,c).getId()));
 		    b.setBackground(themeColors.get("CREAM"));
 		    b.setFocusPainted(false);
 		    int rr = r, cc = c;
@@ -134,15 +133,15 @@ public class SwingUI
 	  controller.onCardClicked(r, c, () -> {
 		// Schedule a delay using Swing Timer
 		new javax.swing.Timer(700, e -> {
-		    BoardCell a = model.getBoard().getCellAt(r, c); // not the first; so we must find both
+		    BoardCell a = controller.getModel().getBoard().getCellAt(r, c); // not the first; so we must find both
 			// Find a non-matched partner (the firstPick was internal)
 			// Simpler: just flip back all faceUp but not matched & not this one after mismatch
 			// But we have explicit method: we need both; so scan
 		    BoardCell first = null, second = null;
 		    outer:
-		    for (int i=0;i<model.getBoard().getRows();i++)
-			  for (int j=0;j<model.getBoard().getCols();j++) {
-				BoardCell cell = model.getBoard().getCellAt(i,j);
+		    for (int i=0;i< controller.getModel().getBoard().getRows();i++)
+			  for (int j=0;j<controller.getModel().getBoard().getCols();j++) {
+				BoardCell cell = controller.getModel().getBoard().getCellAt(i,j);
 				if (cell.isSelected() && !cell.isAllMatched()) {
 				    if (first == null) first = cell;
 				    else { second = cell; break outer; }
@@ -157,7 +156,7 @@ public class SwingUI
 	  refresh();
 	  if (controller.isWin())
 	  {
-		status.setText("You win! " + model.toString());
+		status.setText("You win! " + controller.getModel().toString());
 		gameOver(true);
 	  }
     }
@@ -165,7 +164,7 @@ public class SwingUI
 	  //System.out.println("REFRESH!");
 	  for (int r=0;r<ROWS;r++) for (int c=0;c<COLS;c++)
 	  {
-		BoardCell cell = model.getBoard().getCellAt(r,c);
+		BoardCell cell = controller.getModel().getBoard().getCellAt(r,c);
 		JButton b = buttons[r][c];
 		if(cell.isAllMatched())
 		{
@@ -182,7 +181,7 @@ public class SwingUI
 		    b.setIcon(faceIcons.get(cell.getId()));
 		}
 	  }
-	  status.setText("Difficulty: " + difficulty + "   " + model.toString());
+	  status.setText("Difficulty: " + difficulty + "   " + controller.getModel().toString());
     }
 
     /**
@@ -235,7 +234,7 @@ public class SwingUI
 	  ok.addActionListener(e -> {
 		dialog.dispose();
 		chooseDifficulty();
-		model.resetGame(difficulty);
+		controller.getModel().resetGame(difficulty);
 		refresh();
 	  });
 
@@ -292,7 +291,7 @@ public class SwingUI
 	  JButton ok = new JButton("OK");
 	  ok.setBackground(themeColors.get("GREEN"));
 	  ok.addActionListener(e -> {
-		model = new GameModel(ROWS, COLS, System.nanoTime(),difficulty);
+		controller.getModel().resetGame(difficulty);
 		dialog.dispose();
 	  });
 	  ;
@@ -304,6 +303,8 @@ public class SwingUI
 		    model = new GameModel(ROWS, COLS, System.nanoTime(),1);
 		    controller = new GameController(model);
 		    controller.loadState("src/states/gameState.json");
+		    model = controller.getModel();
+		    System.out.println(controller.getModel().getBoard().toString());
 		    //refresh();
 		} catch (IOException ex)
 		{
