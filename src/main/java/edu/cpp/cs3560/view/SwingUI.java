@@ -44,12 +44,13 @@ public class SwingUI
 	  setUpIcons();
 	  frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	  frame.setLayout(new BorderLayout(10,10));
-	  JPanel top = new JPanel(new BorderLayout());
+	  JPanel top = new JPanel(new FlowLayout(FlowLayout.LEADING));
 	  top.add(status, BorderLayout.WEST);
 	  top.setBackground(themeColors.get("BROWN"));
 	  top.setForeground(themeColors.get("CREAM"));
 	  status.setForeground(themeColors.get("CREAM"));
-	  JButton save = new JButton("save");
+	  JPanel buttons = new JPanel(new BorderLayout());
+	  JButton save = new JButton("SAVE");
 	  save.setBackground(themeColors.get("GREEN"));
 	  save.addActionListener(e -> {
 		try
@@ -60,7 +61,17 @@ public class SwingUI
 		    throw new RuntimeException(ex);
 		}
 	  });
-	  top.add(save, BorderLayout.EAST);
+	  JButton reset = new JButton("New Game");
+	  reset.setBackground(themeColors.get("CREAM"));
+	  reset.addActionListener(e -> {
+		chooseDifficulty();
+		//controller.getModel().resetGame(difficulty);
+		refresh();
+	  });
+	  buttons.add(reset, BorderLayout.LINE_START);
+	  buttons.add(save, BorderLayout.LINE_END);
+	  buttons.setSize(50, 100);
+	  top.add(buttons, BorderLayout.EAST);
 	  frame.add(top, BorderLayout.NORTH);
 	  frame.add(grid, BorderLayout.CENTER);
 	  grid.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -267,6 +278,7 @@ public class SwingUI
 	  dialog.setLocationRelativeTo(frame);
 	  dialog.setVisible(true);
     }
+
     /**
      * Opens up a dialog box to get the user to select difficulty from a drop down.
      */
