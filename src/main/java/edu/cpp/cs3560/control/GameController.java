@@ -16,7 +16,7 @@ public class GameController
     private GameModel model; //model of the game.
     private BoardCell firstPick; //first cell chosen.
     private boolean inputLocked = false; //if the game is accepting input at this time.
-    int difficulty = 1; //difficulty level, corresponding to the number of items that need to be matched each tile.
+    //int difficulty = 1; //difficulty level, corresponding to the number of items that need to be matched each tile.
     Scanner input; //and input for command line app.
 
     /**
@@ -26,17 +26,6 @@ public class GameController
     public GameController(GameModel model)
     {
 	  this.model = model;
-    }
-
-    /**
-     * Constructor for a game controller, including a difficulty setting.
-     * @param model model of the game.
-     * @param difficulty corresponding to the number of items that need to be matched each tile.
-     */
-    public GameController(GameModel model, int difficulty)
-    {
-	  this.model = model;
-	  this.difficulty = difficulty;
     }
 
     /**
@@ -223,5 +212,18 @@ public class GameController
 	  inputLocked = false;
     }
     public boolean isWin() { return model.getBoard().allMatched(); }
+    /**
+     * User loses when they have incorrect moves greater than
+     * the board level * 3.
+     * @return Indicates whether or not the user has lost.
+     */
+    public boolean hasLost()
+    {
+	  if(model.getIncorrectMoves() > (model.getBoard().getLevel() * 3))
+	  {
+		return true;
+	  }
+	  return false;
+    }
 
 }

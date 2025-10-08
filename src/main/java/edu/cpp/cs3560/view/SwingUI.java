@@ -180,7 +180,10 @@ public class SwingUI
 		}) {{ setRepeats(false); }}.start();
 	  });
 	  refresh();
-	  if (controller.isWin())
+	  if(controller.hasLost())
+	  {
+		gameOver(false);
+	  }else if (controller.isWin())
 	  {
 		status.setText("You win! " + controller.getModel().toString());
 		gameOver(true);
@@ -248,7 +251,7 @@ public class SwingUI
 		congrats += "You won!";
 	  }else
 	  {
-		congrats += "You lost!";
+		congrats += "You lost...";
 	  }
 	  congrats += "...... Play Again?";
 	  JLabel label = new JLabel(congrats);

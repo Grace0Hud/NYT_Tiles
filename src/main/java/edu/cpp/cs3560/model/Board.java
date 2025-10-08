@@ -16,7 +16,7 @@ public class Board
 {
     private final int rows, cols; //number of rows and columns.
     private final BoardCell[][] grid; // a grid with cells in each section.
-    int level; //number of cards per tile in the board.
+    private int level; //number of cards per tile in the board.
     List<Integer> ids = new ArrayList<>(); // ids assigned to cards in the board.
 
     /**
