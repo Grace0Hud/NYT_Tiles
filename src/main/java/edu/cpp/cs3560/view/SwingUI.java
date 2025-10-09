@@ -287,9 +287,9 @@ public class SwingUI
      */
     private void chooseDifficulty()
     {
+	  difficulty = 1;
 	  JDialog dialog = new JDialog(frame, "Choose Difficulty", true);
 	  dialog.setForeground(themeColors.get("CREAM"));
-	  dialog.setSize(300, 100);
 	  //creating a panel within the dialog to setup the visible selector.
 	  JPanel panel = new JPanel();
 	  dialog.setBackground(themeColors.get("BROWN"));
@@ -345,9 +345,10 @@ public class SwingUI
 	  //adding dialog to panel and setting visible.
 	  panel.add(ok);
 	  panel.add(load);
-	  dialog.pack();
 	  dialog.setLocationRelativeTo(frame);
 	  dialog.add(panel);
+	  dialog.pack();
+	  dialog.setSize(100, 200);
 	  dialog.setVisible(true);
     }
 
