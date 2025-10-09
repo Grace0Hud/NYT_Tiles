@@ -168,20 +168,11 @@ public class Board
      */
     public void shuffleCards(long seed)
     {
-
-	  // --- STEP 1: PREPARE THE MASTER ID LIST ---
-	  // The 'ids' list should already contain 6 repetitions of each of your 8 unique IDs,
-	  // totaling 48 elements. We use this list as the master pool.
-
-	  // --- STEP 2: SHUFFLE THE MASTER LIST ---
 	  // Shuffle the entire list to randomize the distribution across the board.
 	  Collections.shuffle(ids, new Random(seed));
 
-	  // --- STEP 3 & 4: ASSIGN IDS IN BLOCKS WITH LOCAL VALIDATION ---
-
-	  int totalCells = rows * cols;
+	  //assigning ids.
 	  int currentIdIndex = 0;
-
 	  for (int r = 0; r < rows; r++)
 	  {
 		for (int c = 0; c < cols; c++)
@@ -198,8 +189,6 @@ public class Board
 
 			  // Get the next ID from the master shuffled list
 			  int candidateId = ids.get(currentIdIndex);
-
-			  // --- LOCAL VALIDATION LOOP ---
 			  // If the candidateId is already in the 'assignedIds' set for this cell,
 			  // we must swap it with an ID later in the master list.
 			  while (assignedIds.contains(candidateId))
