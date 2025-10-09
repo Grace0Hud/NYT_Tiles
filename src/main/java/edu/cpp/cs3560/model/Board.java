@@ -5,7 +5,6 @@ import java.util.*;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import edu.cpp.cs3560.model.*;
 import edu.cpp.cs3560.serializer.BoardSerializer;
 
 /**
@@ -16,7 +15,7 @@ public class Board
 {
     private final int rows, cols; //number of rows and columns.
     private final BoardCell[][] grid; // a grid with cells in each section.
-    private int level; //number of cards per tile in the board.
+    private final int level; //number of cards per tile in the board.
     List<Integer> ids = new ArrayList<>(); // ids assigned to cards in the board.
 
     /**
@@ -86,6 +85,13 @@ public class Board
 	  shuffleCards(seed);
     }
 
+    /**
+     * Constructor used by a json reader when loading in a game
+     * @param rows number of rows
+     * @param cols number of columns
+     * @param level level of difficulty.
+     * @param cells the board cells to add to the board.
+     */
     @JsonCreator
     public Board(
 		@JsonProperty("rows") int rows,
@@ -99,30 +105,8 @@ public class Board
 	  this.grid = new BoardCell[rows][cols];
 	  for (int i = 0; i < rows; i++)
 	  {
-		for (int j = 0; j < cols; j++)
-		{
-		    grid[i][j] = cells[i][j];
-		}
+		System.arraycopy(cells[i], 0, grid[i], 0, cols);
 	  }
-    }
-
-    public Card[] getAllCards()
-    {
-	  int n = 0;
-	  Card[] cards = new Card[rows * cols];
-	  for (int i = 0; i < rows; i++)
-	  {
-		for (int j = 0; j < cols; j++)
-		{
-		    Card[] localCards = grid[i][j].getCards();
-		    for (int k = 0; k < localCards.length; k++)
-		    {
-			  cards[n] = localCards[k];
-			  n++;
-		    }
-		}
-	  }
-	  return cards;
     }
 
     /**
@@ -142,6 +126,10 @@ public class Board
 	  }
     }
 
+    /**
+     * Getters for rows, column, level.
+     * @return
+     */
     public int getRows()
     {
 	  return rows;
@@ -157,6 +145,9 @@ public class Board
 	  return level;
     }
 
+    /**
+     * reset each of the cells in the board.
+     */
     public void resetBoard()
     {
 	  for (BoardCell[] cells : grid)
@@ -199,7 +190,7 @@ public class Board
 		    // This list will hold the 'level' (3) unique IDs for the current cell
 		    int[] idList = new int[level];
 
-		    // A Set is used for fast, easy checking of local duplicates.
+		    // Helps check for dups
 		    Set<Integer> assignedIds = new HashSet<>();
 
 		    for (int k = 0; k < level; k++)
@@ -213,24 +204,15 @@ public class Board
 			  // we must swap it with an ID later in the master list.
 			  while (assignedIds.contains(candidateId))
 			  {
-
-				// The simplest fix is to swap the current repeating ID
-				// with an ID from the END of the unassigned portion of the master list.
-
 				// 1. Find the index of the last unassigned ID:
 				int lastUnassignedIndex = ids.size() - 1;
 
 				// 2. Perform the swap:
-				// This moves the duplicate ID away, and brings a new, unseen ID into play.
 				Collections.swap(ids, currentIdIndex, lastUnassignedIndex);
 
 				// 3. Update the candidateId after the swap (it now points to the new ID)
 				candidateId = ids.get(currentIdIndex);
-
-				// Note: This swap means the ID that was moved to the end might violate
-				// a future cell's constraint, but the overall distribution remains uniform.
 			  }
-
 			  // The candidateId is now guaranteed to be unique for this cell.
 			  idList[k] = candidateId;
 			  assignedIds.add(candidateId);
@@ -238,19 +220,14 @@ public class Board
 			  currentIdIndex++;
 		    }
 
-		    // --- ASSIGN TO CELL ---
-		    // You'll need to call a method here to store the idList array in your card/cell object
-		    // e.g., cards[r][c].setIds(idList);
+		    //assign the ids to each cell.
 		    for (int i = 0; i < idList.length; i++)
 		    {
 			  grid[r][c].setCardAt(i, new Card(idList[i]));
 		    }
-
-		    // DEBUGGING: Print the cell's IDs and ensure uniqueness
-		    //System.out.println("Cell (" + r + ", " + c + ") assigned IDs: " + Arrays.toString(idList));
 		}
 	  }
-	  System.out.println(toString());
+	  //System.out.println(toString());
     }
 
     /**
@@ -303,16 +280,6 @@ public class Board
     public BoardCell getCellAt(int r, int c)
     {
 	  return grid[r][c];
-    }
-
-    public void selectCell(int r, int c)
-    {
-	  grid[r][c].selectCell();
-    }
-
-    public void deSelectCell(int r, int c)
-    {
-	  grid[r][c].deSelectCell();
     }
 
     public boolean isCellmatched(int r, int c)

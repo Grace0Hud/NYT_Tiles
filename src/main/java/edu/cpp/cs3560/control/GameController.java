@@ -141,6 +141,10 @@ public class GameController
 	  }
     }
 
+    /**
+     * Save the state of the game into the designated folder under correct file.
+     * @throws IOException if the file path can't be found.
+     */
     public void saveState() throws IOException
     {
 	  ObjectMapper objectMapper = new ObjectMapper();
@@ -159,6 +163,11 @@ public class GameController
 	 objectMapper.writeValue(new File("src/states/gameState.json"), jsonNode);
     }
 
+    /**
+     * Loads the state of the game from a json file.
+     * @param filepath the filepath to load
+     * @throws IOException if the file does not exist.
+     */
     public void loadState(String filepath) throws IOException
     {
 	  ObjectMapper objectMapper = new ObjectMapper();
@@ -195,7 +204,7 @@ public class GameController
 	  String answer = input.next();
 	  if(answer.equals("y"))
 	  {
-		model.getBoard().shuffleCards(System.currentTimeMillis());
+		model.resetGame();
 		runGame();
 	  }else
 	  {
@@ -219,11 +228,7 @@ public class GameController
      */
     public boolean hasLost()
     {
-	  if(model.getIncorrectMoves() > (model.getBoard().getLevel() * 3))
-	  {
-		return true;
-	  }
-	  return false;
+	  return model.getIncorrectMoves() > (model.getBoard().getLevel() * 3);
     }
 
 }

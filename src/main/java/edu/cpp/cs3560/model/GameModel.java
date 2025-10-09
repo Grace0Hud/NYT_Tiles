@@ -89,12 +89,11 @@ public class GameModel
     @Override
     public String toString()
     {
-	  StringBuilder str = new StringBuilder();
-	  str.append("Level: " + board.getLevel() + "    ");
-	  str.append("Score: " + score + "    ");
-	  str.append("Total Moves: " + numMoves + "    ");
-	  str.append("Incorrect Moves: " + incorrectMoves + "    ");
+	  String str = "Level: " + board.getLevel() + "    " +
+		    "Score: " + score + "    " +
+		    "Total Moves: " + numMoves + "    " +
+		    "Incorrect Moves: " + incorrectMoves + "    ";
 	  //str.append(board.toString());
-	  return str.toString();
+	  return str;
     }
 }

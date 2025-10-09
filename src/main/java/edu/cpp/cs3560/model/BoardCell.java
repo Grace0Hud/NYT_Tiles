@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.cpp.cs3560.serializer.BoardCellSerializer;
-import edu.cpp.cs3560.serializer.BoardSerializer;
-
-import java.util.ArrayList;
 
 /**
  * Class to represent a specific cell in a board.
@@ -15,9 +12,7 @@ import java.util.ArrayList;
 @JsonSerialize(using = BoardCellSerializer.class)
 public class BoardCell
 {
-    @JsonIgnore
     final int level;
-    @JsonIgnore
     final int id;
     private final Card[] cards;
     private boolean selected;
@@ -47,6 +42,13 @@ public class BoardCell
 	  initializeCards();
     }
 
+    /**
+     * Constructor used for json seralization.
+     * @param id the id of the cell
+     * @param level the level of the cell
+     * @param selected if the card was selected at last save.
+     * @param cards all of the cards in the board cell.
+     */
     @JsonCreator
     public BoardCell(
 		@JsonProperty("id") int id,
@@ -71,30 +73,21 @@ public class BoardCell
 	  }
     }
 
+    /**
+     * Simple getters and setters for various elements.
+     */
     public int getId()
     {
 	  return id;
     }
-
     public int getLevel()
     {
 	  return level;
     }
-
-    public void resetCell()
-    {
-	  deSelectCell();
-	  for(Card card : cards)
-	  {
-		card.setMatched(false);
-	  }
-    }
-
     public int getIdAt(int level)
     {
 	  return cards[level].getId();
     }
-
     public void setCardId(int level, int id)
     {
 	  cards[level].setId(id);
@@ -115,15 +108,37 @@ public class BoardCell
     {
 	  this.selected = true;
     }
-
     public void deSelectCell()
     {
 	  this.selected = false;
     }
-
     public boolean isSelected()
     {
 	  return selected;
+    }
+    public boolean isCardMatched(int level)
+    {
+	  return cards[level].isMatched();
+    }
+    public void markCardMatched(int level)
+    {
+	  cards[level].markMatched();
+    }
+    public boolean isAllMatched()
+    {
+	  return checkAllMatched();
+    }
+
+    /**
+     * Resets a specific cell by unmatching all the cards.
+     */
+    public void resetCell()
+    {
+	  deSelectCell();
+	  for(Card card : cards)
+	  {
+		card.setMatched(false);
+	  }
     }
 
     /**
@@ -170,20 +185,7 @@ public class BoardCell
 	  }
 	  return false;
     }
-    public boolean isCardMatched(int level)
-    {
-	  return cards[level].isMatched();
-    }
 
-    public void markCardMatched(int level)
-    {
-	  cards[level].markMatched();
-    }
-
-    public boolean isAllMatched()
-    {
-	  return checkAllMatched();
-    }
 
     /**
      * Checks if all the cards contained in the cell have been matched.

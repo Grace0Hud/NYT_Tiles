@@ -24,6 +24,12 @@ public class Card
 	  this.selected = false;
     }
 
+    /**
+     * Constructor to serialize to Json
+     * @param id the id of the card
+     * @param matched if the card has been matched
+     * @param selected if the card is selected.
+     */
     @JsonCreator
     public Card(
 		@JsonProperty("id") int id,
@@ -34,6 +40,10 @@ public class Card
 	  this.matched = matched;
 	  this.selected = selected;
     }
+
+    /**
+     * Simple getters/setters.
+     */
     public int getId()
     {
 	  return id;
@@ -68,6 +78,10 @@ public class Card
 	  this.matched = matched;
     }
 
+    /**
+     * Assistant function to help print out the cards.
+     * @return
+     */
     public String toString()
     {
 	  StringBuilder str = new StringBuilder();

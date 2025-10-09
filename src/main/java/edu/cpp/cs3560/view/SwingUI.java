@@ -36,6 +36,7 @@ public class SwingUI
 
     /**
      * Constructs the frame for the swing UI.
+     * including a frame and buttons.
      */
     public SwingUI() {
 	  //opens a dialog box to choose the difficulty before beginning.
@@ -49,6 +50,7 @@ public class SwingUI
 	  top.setBackground(themeColors.get("BROWN"));
 	  top.setForeground(themeColors.get("CREAM"));
 	  status.setForeground(themeColors.get("CREAM"));
+	  //adding the reset/save buttons
 	  JPanel buttons = new JPanel(new BorderLayout());
 	  JButton save = new JButton("SAVE");
 	  save.setBackground(themeColors.get("GREEN"));
@@ -65,7 +67,6 @@ public class SwingUI
 	  reset.setBackground(themeColors.get("CREAM"));
 	  reset.addActionListener(e -> {
 		chooseDifficulty();
-		//controller.getModel().resetGame(difficulty);
 		refresh();
 	  });
 	  buttons.add(reset, BorderLayout.LINE_START);
@@ -74,9 +75,9 @@ public class SwingUI
 	  top.add(buttons, BorderLayout.EAST);
 	  frame.add(top, BorderLayout.NORTH);
 	  frame.add(grid, BorderLayout.CENTER);
+	  //build up the buttons.
 	  grid.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 	  grid.setBackground(themeColors.get("BROWN"));
-	  //build up the buttons.
 	  buildGrid();
 	  frame.setSize(600, 650);
 	  frame.setLocationRelativeTo(null);
@@ -91,6 +92,7 @@ public class SwingUI
     private void setUpIcons()
     {
 	  String[] glyphs;
+	  //use a different number of glyphs for each difficulty.
 	  if(difficulty == 1)
 	  {
 		glyphs = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
@@ -101,37 +103,38 @@ public class SwingUI
 	  {
 		glyphs = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X"};
 	  }
+
+	  //assign each glphe to its hash value.
 	  HashMap<Integer, String> cardGlyphs = new HashMap<>();
 	  for(int i = 0; i < ROWS * COLS; i++)
 	  {
 		cardGlyphs.put(i, glyphs[i%glyphs.length]);
 	  }
-		String glyph = "";
-		int count = 0;
-		for(int i = 0; i < ROWS; i++)
+	  int count = 0;
+	  //assigning each cell glyph.
+	  for (int i = 0; i < ROWS; i++)
+	  {
+		for (int j = 0; j < COLS; j++)
 		{
-		    for(int j = 0; j < COLS; j++)
-		    {
-			  faceIcons.put(count, iconColor(themeColors.get("CREAM"), getCellGlyph(i,j, cardGlyphs)));
-			  count ++;
-		    }
+		    faceIcons.put(count, iconColor(themeColors.get("CREAM"), getCellGlyph(i, j, cardGlyphs)));
+		    count++;
 		}
+	  }
     }
 
     private String getCellGlyph(int r, int c, HashMap<Integer, String> icons)
     {
 	  String glyph = "";
+	  //add glph associated with each card to the card.
 	  Card[] cards = controller.getModel().getBoard().getCellAt(r, c).getCards();
 	  for (int k = 0; k < cards.length; k++)
 	  {
-		//System.out.println("Key: " + cards[k].getId());
 		if(!cards[k].isMatched())
-		    //glyph += cards[k].getId() + " ";
 		    glyph += icons.get(cards[k].getId()) + "   ";
 	  }
-	  //System.out.println("Glyph: " + glyph);
 	  return glyph;
     }
+
     /**
      * Creates a grid of buttons to be used as the board.
      */
@@ -159,16 +162,14 @@ public class SwingUI
 	  controller.onCardClicked(r, c, () -> {
 		// Schedule a delay using Swing Timer
 		new javax.swing.Timer(700, e -> {
-		    BoardCell a = controller.getModel().getBoard().getCellAt(r, c); // not the first; so we must find both
-			// Find a non-matched partner (the firstPick was internal)
-			// Simpler: just flip back all faceUp but not matched & not this one after mismatch
-			// But we have explicit method: we need both; so scan
 		    BoardCell first = null, second = null;
 		    outer:
 		    for (int i=0;i< controller.getModel().getBoard().getRows();i++)
 			  for (int j=0;j<controller.getModel().getBoard().getCols();j++) {
 				BoardCell cell = controller.getModel().getBoard().getCellAt(i,j);
-				if (cell.isSelected() && !cell.isAllMatched()) {
+				if (cell.isSelected() && !cell.isAllMatched())
+				{
+				    //if the cell is selected and hasn't been matched yet, we need to go do a thing.
 				    if (first == null) first = cell;
 				    else { second = cell; break outer; }
 				}
@@ -180,6 +181,7 @@ public class SwingUI
 		}) {{ setRepeats(false); }}.start();
 	  });
 	  refresh();
+	  //check if win or lose condition has been met.
 	  if(controller.hasLost())
 	  {
 		gameOver(false);
@@ -190,21 +192,19 @@ public class SwingUI
 	  }
     }
     private void refresh() {
-	  //System.out.println("REFRESH!");
 	  for (int r=0;r<ROWS;r++) for (int c=0;c<COLS;c++)
 	  {
 		BoardCell cell = controller.getModel().getBoard().getCellAt(r,c);
 		JButton b = buttons[r][c];
-		if(cell.isAllMatched())
+		if(cell.isAllMatched()) //set to matched!
 		{
-		    //System.out.println("All Matched");
 		    b.setIcon(backIcon);
-		}else if(cell.isSelected())
+		}else if(cell.isSelected()) //set to selected ui
 		{
-		    //System.out.println("Selected");
 		    b.setBorder(BorderFactory.createLineBorder(themeColors.get("GREEN"), 4));
 		}else
 		{
+		    //set up the icons correctly. remove any uneeded glphs.
 		    b.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		    setUpIcons();
 		    b.setIcon(faceIcons.get(cell.getId()));
@@ -235,9 +235,13 @@ public class SwingUI
 	  return new ImageIcon(img);
     }
 
+    /**
+     * Creates a popup for after the game has ended, whether by win or loss.
+     * @param win if the result of the game was a win.
+     */
     private void gameOver(boolean win)
     {
-	  JDialog dialog = new JDialog(frame, "Choose Difficulty", true);
+	  JDialog dialog = new JDialog(frame, "Game Over", true);
 	  dialog.setForeground(themeColors.get("CREAM"));
 	  dialog.setSize(500, 100);
 	  //creating a panel within the dialog to setup the visible selector.
@@ -245,6 +249,7 @@ public class SwingUI
 	  dialog.setBackground(themeColors.get("BROWN"));
 	  panel.setBackground(themeColors.get("BROWN"));
 
+	  //setting up potential text based on win/loss
 	  String congrats = "";
 	  if(win)
 	  {
@@ -267,13 +272,14 @@ public class SwingUI
 		refresh();
 	  });
 
+	  //button to end teh game and close this out.
 	  JButton no = new JButton("No...");
 	  no.setBackground(themeColors.get("GREEN"));
 	  no.addActionListener(e -> {
 		dialog.dispose();
 		System.exit(0);
 	  });
-	  //adding dialog to panel and setting visible.
+	  //adding elements and making dialog visible.
 	  panel.add(ok);
 	  panel.add(no);
 	  dialog.add(panel);
@@ -324,7 +330,6 @@ public class SwingUI
 		controller.getModel().resetGame(difficulty);
 		dialog.dispose();
 	  });
-	  ;
 	  JButton load = new JButton("Load");
 	  load.setBackground(themeColors.get("GREEN"));
 	  load.addActionListener(e -> {
