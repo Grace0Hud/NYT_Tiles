@@ -17,7 +17,7 @@ public class GameController
     private BoardCell firstPick; //first cell chosen.
     private boolean inputLocked = false; //if the game is accepting input at this time.
     //int difficulty = 1; //difficulty level, corresponding to the number of items that need to be matched each tile.
-    Scanner input; //and input for command line app.
+    private Scanner input; //and input for command line app.
 
     /**
      * Constructor for a game controller.
