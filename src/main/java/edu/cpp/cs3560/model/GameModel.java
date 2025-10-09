@@ -12,18 +12,45 @@ public class GameModel
     private int score = 0; //the current score.
     private int numMoves = 0; //the number of moves that have been taken.
     private int incorrectMoves = 0;
+
+    /**
+     * Constructs a game model with a specific number of rows and cols
+     * @param rows
+     * @param cols
+     * @param seed a seed for random generation.
+     */
     public GameModel(int rows, int cols, long seed)
     {
 	  this.board = new Board(rows, cols, seed);
     }
 
+    /**
+     * Constructsa a game model with a specific number of rows, cols, and levels.
+     * @param rows
+     * @param cols
+     * @param seed
+     * @param level
+     */
     public GameModel(int rows, int cols, long seed, int level)
     {
 	  this.board = new Board(rows, cols, seed, level);
     }
+
+    /**
+     * Constructor used by the Json creator
+     *
+     * @param board
+     */
     @JsonCreator
-    public GameModel(@JsonProperty("board") Board board)
+    public GameModel(
+		@JsonProperty("score") int score,
+		@JsonProperty("numMoves") int numMoves,
+		@JsonProperty("incorrectMoves") int incorrectMoves,
+		@JsonProperty("board") Board board)
     {
+	  this.score = score;
+	  this.numMoves = numMoves;
+	  this.incorrectMoves = incorrectMoves;
 	  this.board = board;
     }
     public Board getBoard() { return board; }
