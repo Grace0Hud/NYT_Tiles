@@ -14,6 +14,10 @@ import java.io.IOException;
  */
 public class BoardCellSerializer extends StdSerializer<BoardCell>
 {
+    public BoardCellSerializer()
+    {
+	  this(null);
+    }
     public BoardCellSerializer(Class<BoardCell> t)
     {
 	  super(t);

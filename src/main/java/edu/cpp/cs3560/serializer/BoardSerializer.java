@@ -13,6 +13,13 @@ import java.io.IOException;
  */
 public class BoardSerializer extends StdSerializer<Board>
 {
+
+
+    public BoardSerializer()
+    {
+	  this(null);
+
+    }
     public BoardSerializer(Class<Board> t)
     {
 	  super(t);
